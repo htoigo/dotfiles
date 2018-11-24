@@ -1,0 +1,124 @@
+# .alias:  for SuSE Linux
+#
+# We define functions here as well as aliases.
+
+#
+#  Functions
+#
+
+# Put function defs before aliases, so aliases aren't expanded
+# within them, changing 'mv' to 'mv -i', etc.
+
+
+# nvid-set runs nvidia-settings properly on display :8, which is the
+# off-screen X server (for rendering by the nvidia card).
+#
+# Without doing this one gets the following error when starting nvidia-settings:
+#     You do not appear to be using the NVIDIA X driver. Please edit
+#     your X configuration file (just run `nvidia-xconfig` as root),
+#     and restart the X server.
+
+nvid-set () {
+  optirun -b none nvidia-settings -c :8
+}
+
+
+## Maintain a file with all passwords
+
+# Search the password file
+
+glp() {
+  # $@: any extra grep options followed by the search string.
+  gpg2 -d $HOME/logins.gpg 2>/dev/null | grep -i "$@" | less
+}
+
+# Edit the password file
+# NOTE: This is obsolete.  We can edit the file directly in Emacs now.
+
+elp() {
+  trap 'rm -f $loginFileClear; trap - RETURN INT' RETURN INT
+
+  local loginFile="$HOME/logins.gpg"
+  local loginFileClear="$HOME/logins"
+
+  gpg2 $loginFile && \
+    vim "+set nobackup noswapfile noundofile viminfo=" $loginFileClear && \
+    gpg2 --batch --yes --symmetric --sign --force-mdc $loginFileClear && \
+    cp $loginFile ${loginFile}.bak
+}
+
+psgrep()
+{
+  ps -ef | grep $1 | grep -v grep
+}
+
+# Convert text files from dos to unix format and vice versa.
+#   - is there something faster than sed?
+
+dos2unix()
+{
+  if [ $# -eq 0 ]; then
+    # filter mode; use stdin & stdout
+    sed -e 's/\r$//'
+  else
+    # filename(s) were entered, convert each file in-place
+    sed -i~ -e 's/\r$//' "$@"
+  fi
+}
+
+unix2dos()
+{
+  if [ $# -eq 0 ]; then
+    # filter mode; use stdin & stdout
+    sed -e '/^$\|[^\r]$/ s/$/\r/'
+  else
+    # filename(s) were entered, convert each file in-place
+    sed -i~ -e '/^$\|[^\r]$/ s/$/\r/' "$@"
+  fi
+}
+
+sens()
+{
+  while true; do clear; sensors; sleep ${1:-3}; done
+}
+
+# Model for using traps within functions
+#afunc()
+#{
+#  local tmp_file=/tmp/afunc.$$
+#  trap 'rm -f $tmp_file; trap - INT' INT
+#
+#  # body of function
+#
+#  trap - INT
+#}
+
+#
+#  Aliases
+#
+
+# Use ls --hide instead of -B because --hide can be overridden by -a & -A
+alias ls='ls --hide=*~ --color=auto'
+alias la='ls -A'
+alias ll='ls -lF'
+alias lla='ls -lFA'
+alias l='ls -CF'
+alias lf='ls -F'
+alias po=popd
+alias pu=pushd
+alias rm='rm -I'
+alias cp='cp -i'
+alias mv='mv -i'
+alias grep='grep -E --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias lolcat=lolcat.ruby2.1
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# for ssh-agent
+alias keyon='ssh-add -t 10800'
+alias keyoff='ssh-add -D'
+alias keylist='ssh-add -l'

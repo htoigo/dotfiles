@@ -1,0 +1,917 @@
+#+TITLE: Emacs Configuration
+#+AUTHOR: Harry H. Toigo
+#+EMAIL: hhtoigo@gmail.com
+#+OPTIONS: toc:nil num:nil
+
+* Start with Sensible Defaults
+
+Due to its long history, or perhaps just the eccentricity of its creators, Emacs
+has some rather odd default behavior, out-of-the-box. Let's bring things into
+the contemporary era.
+
+First, we begin with some sensible defaults. These settings were compiled from
+Harry R. Schwartz's [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]], and also from Phil Hagelberg's (aka
+Technomancy's) [[https://github.com/technomancy/better-defaults][better-defaults]] ELPA package. And Magnar Sveen's...
+
+** TODO Set up my own sensible defaults
+
+   Pick and choose among +HRS's+, +Technomancy's+, and Magnar Sveen's settings.
+
+** Settings from Technomancy's better-defaults package
+
+Enable ido mode, unless helm has been installed--in which case, presumably, one
+would prefer helm over ido mode.
+
+ido mode allows many operations (like buffer switching and file navigation) to
+be enhanced with instant feedback on the completion options. If you like ido,
+you might want to check out [[https://github.com/nonsequitur/smex][smex]] and [[https://github.com/scottjad/ido-hacks][ido-hacks]]. Sometimes when creating a new
+file, you'll want temporarily to disable ido; this can be done with C-f. You may
+also want to look at the variable ido-use-virtual-buffers.
+
+#+BEGIN_SRC emacs-lisp
+  (unless (fboundp 'helm-mode)
+    (ido-mode t)
+    (setq ido-enable-flex-matching t))
+#+END_SRC
+
+Turn off the menu bar, toolbar and scroll bars to gain valuable screen space.
+Now entering the zen realm of nothing-but-the-text...
+
+#+BEGIN_SRC emacs-lisp
+  (menu-bar-mode -1)
+  (when (fboundp 'tool-bar-mode)
+    (tool-bar-mode -1))
+  (when (fboundp 'scroll-bar-mode)
+    (scroll-bar-mode -1))
+  (when (fboundp 'horizontal-scroll-bar-mode)
+    (horizontal-scroll-bar-mode -1))
+#+END_SRC
+
+The =uniquify= library makes it so that when you visit two files with the same
+name in different directories, the buffer names have the directory name
+prepended to them instead of the silly =file<2>= names you get by default.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'uniquify)
+  (setq uniquify-buffer-name-style 'forward)
+#+END_SRC
+
+The =saveplace= library saves the location of point when you kill a buffer and
+returns to it the next time you visit the associated file.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'saveplace)
+  (setq-default save-place t)
+#+END_SRC
+
+Visually indicate matching pairs of parentheses. Make this display snappier by
+reducing the delay before highlighting a matching paren from 0.125 seconds to
+0.0625 seconds.
+
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode)
+  (setq show-paren-delay 0.0625)
+#+END_SRC
+
+Change the default of =indent-tabs-mode= to nil. Indentation can insert tabs if
+this is non-nil.
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+END_SRC
+
+M-z (by default bound to zap-to-char) is instead bound to the far more useful
+zap-up-to-char.
+
+First, let's experiment with zap-to-char.
+
+*** TODO Change the zap-up-to-char key binding to zf and zd
+
+If we want to change as above, then let's bind the key-chords zf and zd to
+zap-up-to-char forward and backward, respectively.
+
+#+BEGIN_SRC emacs-lisp
+  (autoload 'zap-up-to-char "misc"
+    "Kill up to, but not including ARGth occurrence of CHAR." t)
+;;  (global-set-key (kbd "M-z") 'zap-up-to-char)
+#+END_SRC
+
+Other settings changes:
+  - Apropos commands perform more extensive searches than the default.
+  - Under X, killing and yanking uses the X clipboard rather than just the
+    primary selection.
+  - When middle-clicking the mouse to yank from the clipboard, insert the text
+    where point is, not where the mouse cursor is.
+  - ~require-final-newline~ is set to avoid problems with crontabs, etc.
+  - When you perform a problematic operation, flash the frame instead of ringing
+    the terminal bell. (~visible-bell~ set to t.)
+  - Setting ~load-prefer-newer~ prevents stale elisp bytecode from shadowing
+    more up-to-date source files.
+  - Ediff is set up to use the existing frame instead of creating a new one.
+  - Backups are stored in a single directory inside ~user-emacs-directory~.
+    (Usually ~~/.emacs.d~)
+
+#+BEGIN_SRC emacs-lisp
+  (setq apropos-do-all t
+        save-interprogram-paste-before-kill t
+        mouse-yank-at-point t
+        require-final-newline t
+        visible-bell t
+        load-prefer-newer t
+        ediff-window-setup-function 'ediff-setup-windows-plain
+        save-place-file (concat user-emacs-directory "places")
+        backup-directory-alist `(("." . ,(concat user-emacs-directory
+                                                 "backups"))))
+#+END_SRC
+
+A few key bindings are replaced with more powerful equivalents:
+  - M-/ is =hippie-expand= instead of =dabbrev-expand=
+  - C-x C-b is =ibuffer= instead of =list-buffers=
+  - C-s and C-r are swapped with regex-aware incremental search functions
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-/") 'hippie-expand)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+  (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-M-s") 'isearch-forward)
+  (global-set-key (kbd "C-M-r") 'isearch-backward)
+#+END_SRC
+
+** Settings from Harry Schwartz's sensible-defaults.el
+
+Increase garbage collection threshold.
+
+Allow 20 MB (instead of the default, 800 KB) of memory to be allocated before
+doing garbage collection. This means GC runs less often, which speeds up some
+operations.
+
+#+BEGIN_SRC emacs-lisp
+  (setq gc-cons-threshold 20000000)
+#+END_SRC
+
+Call delete-trailing-whitespace whenever a buffer is saved.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
+Treat CamelCase sub-words as separate words in every programming mode.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'prog-mode-hook 'subword-mode)
+#+END_SRC
+
+Make scripts executable.
+
+When saving a file that starts with `#!', make it executable.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'after-save-hook
+            'executable-make-buffer-file-executable-if-script-p)
+#+END_SRC
+
+Do not assume that sentences should have two spaces after the period. That was
+for manual typewriters. Putting two spaces after a period is utterly, inarguably
+wrong. See this [[https:www.slate.com/articles/technology/technology/2011/01/space_invaders.html][article on Slate]].
+
+#+BEGIN_SRC emacs-lisp
+  (setq sentence-end-double-space nil)
+#+END_SRC
+
+Offer to create parent directories on save.
+
+When saving a file in a directory that does not exist, offer to create
+(recursively) the file's parent directories.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'before-save-hook
+            (lambda ()
+              (when buffer-file-name
+                (let ((dir (file-name-directory buffer-file-name)))
+                  (when (and (not (file-exists-p dir))
+                             (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
+                    (make-directory dir t))))))
+#+END_SRC
+
+Apply changes to highlighted region.
+
+Turn on transient-mark-mode.
+
+#+BEGIN_SRC emacs-lisp
+  (transient-mark-mode t)
+#+END_SRC
+
+Overwrite selected text.
+
+If some text is selected, and you begin typing printable text, replace the
+selected text with your typed text.
+
+#+BEGIN_SRC emacs-lisp
+  (delete-selection-mode t)
+#+END_SRC
+
+Quiet startup.
+
+Do not present the usual startup message/screen, or the initial documentation
+message displayed in the =*scratch*= buffer at startup.
+
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-message t)
+  (setq initial-scratch-message nil)
+#+END_SRC
+
+Make dired file sizes human-readable.
+
+Print human-readable sizes (e.g., 324K 9.5M 2G) in dired buffer listings,
+instead of the exact number of bytes. This is done by adding ~-h~ to the flags
+dired passes to ~ls~ by default.
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default dired-listing-switches "-alh")
+#+END_SRC
+
+
+Shorten yes-or-no questions.
+
+Allow abbreviated responses to yes/no questions.
+
+#+BEGIN_SRC emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+Always highlight code.
+
+Turn on syntax highlighting whenever possible.
+
+#+BEGIN_SRC emacs-lisp
+  (global-font-lock-mode t)
+#+END_SRC
+
+Refresh buffers when files change.
+
+When something changes a file, automatically refresh the buffer associated with
+that file so they do not get out of sync.
+
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode t)
+#+END_SRC
+
+Set the default line length to 80.
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default fill-column 80)
+#+END_SRC
+
+I am not sure if I want to use HRS's ~comment-or-uncomment-region-or-line~
+function, below. The ~comment-dwim~ function already bound to =M-;= seems pretty
+good to me, upon first inspection. So, for now I am not enabling this.
+
+
+Comment or uncomment a region by hitting M-;. If there is no active region, it
+works on the current line.
+
+  (defun sensible-defaults/comment-or-uncomment-region-or-line ()
+    "Comments or uncomments the region or the current line if
+  there's no active region."
+    (interactive)
+    (let (beg end)
+      (if (region-active-p)
+          (setq beg (region-beginning) end (region-end))
+        (setq beg (line-beginning-position) end (line-end-position)))
+      (comment-or-uncomment-region beg end)))
+
+  (global-set-key (kbd "M-;")
+                  'sensible-defaults/comment-or-uncomment-region-or-line)
+
+** Settings from Magnar Sveen
+
+* Escape from Novice Mode
+
+Certain commands in Emacs which "can easily confuse the user" are disabled by
+default. This is the so-called novice mode. We are not confused by these
+commands. Run at full power, please!
+
+#+BEGIN_SRC emacs-lisp
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+#+END_SRC
+
+* Set up the Emacs load path
+
+Additional directories from which to load files.
+
+#+BEGIN_SRC emacs-lisp
+  (setq lisp-dir
+        (expand-file-name "lisp" user-emacs-directory))
+  (setq settings-dir
+        (expand-file-name "settings" user-emacs-directory))
+  (add-to-list 'load-path lisp-dir)
+  (add-to-list 'load-path settings-dir)
+#+END_SRC
+
+* Global Top-Level Definitions
+
+Here we define some utility functions. I have chosen to include these defuns
+here, rather than in another file, to see if the capabilities of Org mode are
+sufficient for keeping things organized, while at the same time having the
+entire Emacs configuration together in one place, printable, exportable, etc. as
+one.
+
+#+BEGIN_SRC emacs-lisp
+(defun install-if-needed (package)
+  "Install a package only if it's not already installed."
+  (unless (package-installed-p package)
+    (package-install package)))
+
+(defun move-beginning-of-line-or-indent (arg)
+  "Move point to first non-whitespace character or beginning of line.
+
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+
+If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+point reaches the beginning or end of the buffer, stop there."
+  (interactive "^p")
+  (or arg (setq arg 1))
+
+  ;; Move by lines first, if ARG is not 1
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+(defun duplicate-current-line-or-region (arg)
+  "Duplicates the current line or region ARG times.
+If there's no region, the current line will be duplicated. However, if
+there's a region, all lines that region covers will be duplicated."
+  (interactive "p")
+  (let (beg end (origin (point)))
+    (if (and mark-active (> (point) (mark)))
+        (exchange-point-and-mark))
+    (setq beg (line-beginning-position))
+    (if mark-active
+        (exchange-point-and-mark))
+    (setq end (line-end-position))
+    (let ((region (buffer-substring-no-properties beg end)))
+      (dotimes (i arg)
+        (goto-char end)
+        (newline)
+        (insert region)
+        (setq end (point)))
+      (goto-char (+ origin (* (length region) arg) arg)))))
+
+(defun rotate-windows (arg)
+  "Rotate your windows; use the prefix argument to rotate the other direction"
+  (interactive "P")
+  (if (not (> (count-windows) 1))
+      (message "You can't rotate a single window.")
+    (let* ((rotate-times (prefix-numeric-value arg))
+           (direction (if (or (< rotate-times 0) (equal arg '(4)))
+                          'reverse
+                        'identity)))
+      (dotimes (_ (abs rotate-times))
+        (dotimes (i (- (count-windows) 1))
+          (let* ((w1 (elt (funcall direction (window-list)) i))
+                 (w2 (elt (funcall direction (window-list)) (+ i 1)))
+                 (b1 (window-buffer w1))
+                 (b2 (window-buffer w2))
+                 (s1 (window-start w1))
+                 (s2 (window-start w2))
+                 (p1 (window-point w1))
+                 (p2 (window-point w2)))
+            (set-window-buffer-start-and-point w1 b2 s2 p2)
+            (set-window-buffer-start-and-point w2 b1 s1 p1)))))))
+#+END_SRC
+
+* Do we need to set up Package.el here?
+
+By default, Emacs automatically loads all installed packages. This happens at
+startup, *after* processing the init file. (Emacs does not load packages at
+startup if invoked with the `-q' or `--no-init-file' options.) To disable
+automatic package loading, change the variable `package-enable-at-startup' to
+`nil'.
+
+In some circumstances, you may want to load packages explicitly in your init
+file (usually because some other code in your init file depends on a package).
+In that case, your init file should call the function `package-initialize'. This
+will automatically set `package-enable-at-startup' to `nil', to avoid loading
+the packages again after processing the init file. Alternatively, you may choose
+to completely inhibit package loading at startup, and invoke the command `M-x
+package-initialize' to load your packages manually. It is up to you to ensure
+that relevant user options, such as `package-load-list' (see below), are set up
+prior to the `package-initialize' call.
+
+For finer control over package loading, you can use the variable
+`package-load-list', *but* it seems that =use-package= allows for even better
+control than `package-load-list' would, right?
+
+** Package Archives
+
+We use ELPA and MELPA.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives
+                 '("gnu" . "https://elpa.gnu.org/packages/")))
+  (add-to-list 'package-archives
+               '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
+#+END_SRC
+
+* Configure =use-package=
+
+If =use-package= is not already installed, bootstrap it.
+
+#+BEGIN_SRC emacs-lisp
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+#+END_SRC
+
+Declare that we will be using =use-package=.
+
+~use-package.el~ is no longer needed at runtime, so (require 'use-package) can
+be wrapped in an ~eval-when-compile~ form, to further reduce load time.
+
+#+BEGIN_SRC emacs-lisp
+  (eval-when-compile
+    ;; The following is not needed if use-package.el is in ~/.emacs.d
+    ;; (add-to-list 'load-path "/path/to/use-package.el")
+    (require 'use-package))
+    (require 'bind-key)           ; if you use any :bind variant
+;;  (require 'diminish)           ; if you use :diminish
+#+END_SRC
+
+Tell =use-package= to be more verbose. Also, ensure packages are installed; i.e.
+if a package declared with use-package has not been installed already, go ahead
+and install it via package.el. These settings were used by Harry Schwartz.
+
+#+BEGIN_SRC emacs-lisp
+  (setq use-package-verbose t
+        use-package-always-ensure t)
+#+END_SRC
+
+Always compile packages.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-compile
+    :config (auto-compile-on-load-mode))
+#+END_SRC
+
+* Personal Information
+
+** Who am I? Where am I?
+
+#+BEGIN_SRC emacs-lisp
+  (setq user-full-name "Harry H. Toigo"
+        user-mail-address "hhtoigo@gmail.com"
+        calendar-latitude 37.8
+        calendar-longitude -122.3
+        calendar-location-name "Alameda, CA")
+#+END_SRC
+
+* Trying Out Packages
+
+Try out packages before permanently installing them.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package try)
+#+END_SRC
+
+* UI Preferences
+
+** Column number
+#+BEGIN_SRC emacs-lisp
+  (setq column-number-mode t)
+#+END_SRC
+
+** Fill column indicator
+
+Enable use of the fill column indicator.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package fill-column-indicator)
+#+END_SRC
+
+** Use fancy lambdas
+
+Why not?
+
+#+BEGIN_SRC emacs-lisp
+  (global-prettify-symbols-mode t)
+#+END_SRC
+
+** Load up a Theme
+
+We store custom theme files in a =themes= subdirectory under
+~user-emacs-directory~ to reduce clutter in ~user-emacs-directory~.
+
+
+#+BEGIN_SRC emacs-lisp
+  (setq custom-theme-directory "~/.emacs.d/themes")
+#+END_SRC
+
+We are using Bozhidar Batsov's solarized color theme, installed via its MELPA
+package, =solarized-theme=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package solarized-theme
+    :custom
+    (solarized-distinct-fringe-background t)
+    ;; (solarized-high-contrast-mode-line t)
+    (solarized-use-more-italic t)
+    (x-underline-at-descent-line t)
+    :config
+    (add-to-list 'custom-enabled-themes 'solarized-light))
+#+END_SRC
+
+The following allows us to adjust the transparency of frames. Transparency
+seems better with dark themes, so I have set it to fully opaque for now.
+
+#+BEGIN_SRC emacs-lisp
+  (defun transparency (value)
+    "Sets the transparency of the frame. 0 is transparent, 100 is opaque."
+    (interactive "nTransparency Value 0 - 100 opaque:")
+    (set-frame-parameter (selected-frame) 'alpha value))
+
+  (defun hht/apply-theme ()
+    "Apply the solarized theme and make frames just slightly transparent."
+    (interactive)
+    (load-theme 'solarized-light t)
+    (transparency 100))
+#+END_SRC
+
+If this code is being evaluated by ~emacs --daemon~, ensure that each
+subsequent frame is themed appropriatedly.
+
+#+BEGIN_SRC emacs-lisp
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+                (lambda (frame)
+                  (with-selected-frame frame (hht/apply-theme))))
+    (hht/apply-theme))
+#+END_SRC
+
+** Tweak Window Chrome
+
+The default frame title is not useful. Instead, let's bind it to the name of the
+current project:
+
+#+BEGIN_SRC emacs-lisp
+  ;; (setq frame-title-format '((:eval (projectile-project-name))))
+  (setq-default default-frame-alist (quote ((width . 84) (height . 38))))
+#+END_SRC
+
+* Helpful Feedback
+** Use =which-key=
+
+=which-key= displays the possible completions for a long keybinding. That is
+really helpful in some modes (like =projectile=, for instance).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :diminish
+    :config (which-key-mode))
+#+END_SRC
+
+* Making Emacs Smarter
+
+** Ido
+
+Enable ido-everywhere mode.
+
+#+BEGIN_SRC emacs-lisp
+  (ido-everywhere)
+#+END_SRC
+
+** Enhance M-x
+
+The =smex= package is a M-x enhancement for Emacs. Built on top of Ido, it
+provides a convenient interface to your most recently and most frequently used
+commands, and to all the other commands, too.
+
+Move the old M-x to =C-c C-c M-x=.
+
+For speed and improved ergonomics, we will use also bind =C-x C-j= to =smex=.
+Steve Yegge recomends using =C-x C-m=, but that is identical to =C-x RET=, which
+is a prefix key sequence for other commands.
+
+Also, we make things more forgiving by binding =C-c C-j= to the same command, in
+case we accidentally hit =C-c= instead of =C-x=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smex
+    :bind (("M-x" . smex)
+           ("M-X" . smex-major-mode-commands)
+           ("C-x C-j" . smex)
+           ("C-c C-j" . smex)
+           ("C-c C-c M-x" . execute-extended-command)))
+#+END_SRC
+
+** Key-chords
+
+Whoa, the mind-exploding power of key chords!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package use-package-chords
+    :config (key-chord-mode 1))
+#+END_SRC
+
+* Editing Settings
+
+** Make new buffers start in Text mode instead of Fundamental mode
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default major-mode 'text-mode)
+#+END_SRC
+
+** Quickly visit our Emacs configuration
+
+I futz around with my dotfiles a lot. This allows me quickly to open my Emacs
+configuration file with =C-c e=.
+
+#+BEGIN_SRC emacs-lisp
+  (defun hht/visit-emacs-config ()
+    (interactive)
+    (find-file "~/.emacs.d/configuration.org"))
+
+  (global-set-key (kbd "C-c e") 'hht/visit-emacs-config)
+#+END_SRC
+
+** Autocompletion: Use =company-mode= everywhere
+
+Completion starts automatically after you type a few letters.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :hook (after-init . global-company-mode))
+#+END_SRC
+
+** Save my location within a file
+
+Using =save-place-mode= saves the location of point for every file I visit. If I
+close the file or close the editor, then later re-open it, point will be at the
+same location.
+
+#+BEGIN_SRC emacs-lisp
+  (save-place-mode t)
+#+END_SRC
+
+** Always indent with spaces
+
+Never use tabs. Tabs are the devil's whitespace.
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+END_SRC
+
+** Deleting
+
+When deleting files, use the system's trash can.
+
+Enable Delete Selection mode, so that typed text replaces the selection if the
+selection is active. Otherwise, typed text is just inserted at point regardless
+of any selection.
+
+#+BEGIN_SRC emacs-lisp
+  (setq delete-by-moving-to-trash t)
+  (delete-selection-mode)
+#+END_SRC
+
+** Backups
+
+Make backups of files even when they are under version control.
+
+#+BEGIN_SRC emacs-lisp
+  (setq vc-make-backup-files t)
+#+END_SRC
+
+* Moving Around
+** Window Navigation and Adjustment
+
+Window navigation.
+
+Use Shift + /arrow/ keys to move among windows, accomplished via
+~windmove-default-keybindings~.
+
+Rotate windows with =C-c C-,=
+
+#+BEGIN_SRC emacs-lisp
+  (windmove-default-keybindings)
+  (global-set-key (kbd "C-c C-,") 'rotate-windows)
+  ;; How to bind (kbd "C-c C-.") to 'rotate-windows with a C-u or negative arg?
+#+END_SRC
+
+** Jumping Around
+*** Ace Jump Mode
+
+Using =ace-jump-mode=, we can navigate almost directly to any position in view,
+within three key presses!
+
+=C-;= starts Ace jump *word* mode
+
+Enter the first character of a word and type one of the highlighted keys
+covering each match to move to that word.
+
+With a prefix argument =C-u C-;= starts Ace Jump *character* mode, allowing you
+to jump to characters within words.
+
+Enter a character, and then type one of the highlighted keys covering each match
+to move to that character position.
+
+=C-u C-u C-;= starts Ace jump *line* mode.
+
+Each non-empty line will be marked; type one of the highlighted keys to move to
+that line.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-jump-mode
+    ;; :bind (("C-;" . ace-jump-mode)
+    ;;        ("C-S-;" . ace-jump-mode-pop-mark))
+    :chords (("jj" . ace-jump-word-mode)
+             ("jk" . ace-jump-char-mode)
+             ("jl" . ace-jump-line-mode)
+             ("jp" . ace-jump-mode-pop-mark))
+    :config (ace-jump-mode-enable-mark-sync))
+#+END_SRC
+
+*** Replicate Vim's `f' command for intra-line jumps
+
+The =jump-char= package gives us an iy-go-to-char enhancement, and acts like
+the `f' key command in Vim. Rather than =M-m=, =M-M=, and =s-m= as Magnar Sveen
+uses for this, let's try binding the key-chords fg and df.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package jump-char
+    :chords (("fg" . jump-char-forward)
+             ("df" . jump-char-backward)))
+#+END_SRC
+
+** Scroll conservatively
+
+When point moves outside the window, Emacs usually re-centers the point. This
+changes things to scroll just enough to bring point back into the window.
+
+#+BEGIN_SRC emacs-lisp
+  (setq scroll-conservatively 100)
+#+END_SRC
+
+* Key Bindings
+
+** Global
+
+We do not need to quit Emacs that easily (or accidentally!), so we change things
+so that =C-x C-c= does not quit Emacs, but rather closes the current frame.
+Instead we quit Emacs with =C-x r q=. A mnemonic for this new way to quit Emacs
+is C-x /really quit/.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-c") 'delete-frame)
+  (global-set-key (kbd "C-x r q") 'save-buffers-kill-terminal)
+#+END_SRC
+
+Make creating a new frame easier. Use =C-x C-n= for that, instead of
+~set-goal-column~ (used by ~next-line~ and ~previous-line~).
+
+#+BEGIN_SRC emacs-lisp
+  (define-key global-map (kbd "C-x C-n") 'make-frame-command)
+#+END_SRC
+
+Bind =C-h= to backspace, same as in the shell. Use F1 for help.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
+#+END_SRC
+
+Make =C-a= toggle between the first non-whitespace character on the line and the
+beginning of the line. We have defined ~move-beginning-of-line-or-indent~ as a
+utility function in the Global Top-Level Definitions section, above. Then we
+remap ~move-beginning-of-line~ to ~move-beginning-of-line-or-indent~.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key [remap move-beginning-of-line]
+                  'move-beginning-of-line-or-indent)
+#+END_SRC
+
+~duplicate-current-line-or-region~ is defined above in the Global Top-Level
+Definitions section.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c d") 'duplicate-current-line-or-region)
+#+END_SRC
+
+* Email
+
+** User Agent
+
+=mu4e= is not packaged for Emacs =package.el=. There are =mu= and =mu4e=
+packages in the openSUSE repos, and we have installed these via zypper.
+
+Use mu4e as our mail user agent.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package mu4e
+    :ensure nil
+    :custom (mail-user-agent 'mu4e-user-agent)
+            (mu4e-maildir "~/Maildir")        ; Fs path, no symlink.
+                                              ; Other folders are relative to
+                                              ; mu4e-maildir.
+            (mu4e-sent-folder "/Sent Mail")   ; Removed the [Gmail] prefix here
+            (mu4e-drafts-folder "/Drafts")    ; ditto
+            (mu4e-trash-folder "/Trash"))     ; ditto
+#+END_SRC
+
+** Sending
+
+Use smtpmail for sending email.
+
+* Org Mode
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode))
+#+END_SRC
+
+* Software Development
+
+** Python
+
+Use Elpy as our python IDE.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package elpy
+    :config (elpy-enable))
+#+END_SRC
+
+** Haskell
+
+If we are using stack, then use FP Complete's intero haskell IDE mode.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package intero
+    :hook (haskell-mode . intero-mode))
+
+  ;; (add-hook 'haskell-mode-hook #'intero-mode)
+#+END_SRC
+
+However, if we are not using stack, then we do not want intero loaded, as it
+throws errors about ... , and we just end up disabling it anyway.
+
+*** TODO Decide which mode to use for haskell editing without stack. haskell-mode?
+
+How to detect that we are not using stack?
+
+** Common Lisp
+
+SLIME, the Superior Lisp Interaction Mode for Emacs.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package slime
+    :config
+    (setq inferior-lisp-program "/usr/bin/sbcl")
+    (setq slime-contribs '(slime-fancy)))
+#+END_SRC
+
+* Encryption
+
+EasyPG: transparent, automatic gnupg encryption / decryption.
+
+It appears that we may no longer need explicitly to do the following. I am leaving
+it here for reference for now.
+
+(use-package epa-file
+  :config (epa-file-enable))
+
+* TeX and LaTeX
+
+AUCTeX makes Emacs into a great LaTeX editor.
+
+Make AUCTeX aware of style files and multi-file documents (using `\include' or
+`\input').
+
+Also load RefTeX, to make most important functions available for entering
+RefTeX mode.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tex
+    :defer t
+    :ensure auctex
+    :config
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil))
+
+  (use-package reftex)
+#+END_SRC
