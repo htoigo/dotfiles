@@ -751,7 +751,7 @@ that line.
 
 The =jump-char= package gives us an iy-go-to-char enhancement, and acts like the
 `f' key command in Vim. For speed, we bind this to the key chords =df= (forward)
-and =sd= ~sd~ (backward).
+and =sd= (backward).
 
 Alas, key chords do not seem to work when defining a keyboard macro. So we need
 another key binding to use when we are defining a keyboard macro. We no longer
