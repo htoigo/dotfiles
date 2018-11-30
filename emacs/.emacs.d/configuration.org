@@ -749,14 +749,22 @@ that line.
 
 *** Replicate Vim's `f' command for intra-line jumps
 
-The =jump-char= package gives us an iy-go-to-char enhancement, and acts like
-the `f' key command in Vim. Rather than =M-m=, =M-M=, and =s-m= as Magnar Sveen
-uses for this, let's try binding the key-chords fg and df.
+The =jump-char= package gives us an iy-go-to-char enhancement, and acts like the
+`f' key command in Vim. For speed, we bind this to the key chords df (forward)
+and sd (backward).
+
+Alas, key chords do not seem to work when defining a keyboard macro. So we need
+another key binding to use when we are defining a keyboard macro. We no longer
+need =M-m= for ~back-to-indentation~, since we have set up =C-a= to toggle
+between that and beginning of line, so we also bind this to =M-m= (forward) and
+=M-M= (backward).
 
 #+BEGIN_SRC emacs-lisp
   (use-package jump-char
-    :chords (("fg" . jump-char-forward)
-             ("df" . jump-char-backward)))
+    :chords (("df" . jump-char-forward)
+             ("sd" . jump-char-backward))
+    :bind (("M-m" . jump-char-forward)
+           ("M-M" . jump-char-backward)))
 #+END_SRC
 
 ** Scroll conservatively
