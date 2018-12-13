@@ -861,8 +861,8 @@ Install Projectile for navigating swiftly inside projects.
 B. Batsov, in the Projectile README Quickstart section, recomends the following:
 
 (projectile-mode +1)
-(define-key projectile-mode-map (kbd "s-p") #'projectile-command-map)
-(define-key projectile-mode-map (kbd "C-c p") #'projectile-command-map)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 Harry Schwartz sets ~projectile-global-mode~, in order to use Projectile everywhere:
 
@@ -872,8 +872,8 @@ Harry Schwartz sets ~projectile-global-mode~, in order to use Projectile everywh
   (use-package projectile
     :config
     (projectile-mode +1)
-    (define-key projectile-mode-map (kbd "s-p") #'projectile-command-map)
-    (define-key projectile-mode-map (kbd "C-c p") #'projectile-command-map))
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+END_SRC
 
 ** Python
@@ -912,6 +912,21 @@ SLIME, the Superior Lisp Interaction Mode for Emacs.
     :config
     (setq inferior-lisp-program "/usr/bin/sbcl")
     (setq slime-contribs '(slime-fancy)))
+#+END_SRC
+
+** Clojure
+
+clojure-mode is a major mode for editing Clojure and ClojureScript code.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package clojure-mode
+    :hook (clojure-mode . #'subword-mode))
+#+END_SRC
+
+CIDER is a Clojure interactive development environment and REPL for Emacs.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package cider)
 #+END_SRC
 
 * Encryption
