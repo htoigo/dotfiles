@@ -854,6 +854,28 @@ Use smtpmail for sending email.
 
 * Software Development
 
+** General
+
+Install Projectile for navigating swiftly inside projects.
+
+B. Batsov, in the Projectile README Quickstart section, recomends the following:
+
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") #'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") #'projectile-command-map)
+
+Harry Schwartz sets ~projectile-global-mode~, in order to use Projectile everywhere:
+
+(projectile-global-mode)
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :config
+    (projectile-mode +1)
+    (define-key projectile-mode-map (kbd "s-p") #'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-c p") #'projectile-command-map))
+#+END_SRC
+
 ** Python
 
 Use Elpy as our python IDE.
