@@ -10,6 +10,52 @@
 # within them, changing 'mv' to 'mv -i', etc.
 
 
+#
+# Resizing the Serial Console Window
+#
+
+# The serial console window often defaults to LINES=24 COLUMNS=80, which is not
+# what we want. The following functions correct this. They were found at
+#
+#   unix.stackexchange.com/questions/16578/resizable-serial-console-window/
+#
+# These scripts may be too slow, especially to be run after every command. If
+# that turns out to be the case, then we can instead use the `resize' program
+# from the xterm package.
+
+# resize() just uses ANSI escape codes.
+
+resize() {
+  old=$(stty -g)
+  stty raw -echo min 0 time 5
+
+  printf '\0337\033[r\033[999;999H\033[6n\0338' >/dev/tty
+  IFS='[;R' read -r _ rows cols _ </dev/tty
+
+  stty "$old"
+  # echo "cols:$cols"
+  # echo "rows:$rows"
+  stty cols "$cols" rows "$rows"
+}
+
+# resize2() is influenced by resize.sh from xterm. It uses an xterm-specific
+# code for getting the information we want (which is also implemented in many
+# other terminal emulators).
+
+resize2() {
+  old=$(stty -g)
+  stty raw -echo min 0 time 5
+
+  printf '\033[18t' >/dev/tty
+  IFS=';t' read -r _ rows cols _ </dev/tty
+
+  stty "$old"
+  # echo "cols:$cols"
+  # echo "rows:$rows"
+  stty cols "$cols" rows "$rows"
+}
+
+
 # nvid-set runs nvidia-settings properly on display :8, which is the
 # off-screen X server (for rendering by the nvidia card).
 #
