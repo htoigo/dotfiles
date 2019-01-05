@@ -868,13 +868,12 @@ Harry Schwartz sets ~projectile-global-mode~, in order to use Projectile everywh
 
 (projectile-global-mode)
 
-#+BEGIN_SRC emacs-lisp
+
   (use-package projectile
     :config
     (projectile-mode +1)
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-#+END_SRC
 
 ** Python
 
@@ -918,16 +917,14 @@ SLIME, the Superior Lisp Interaction Mode for Emacs.
 
 clojure-mode is a major mode for editing Clojure and ClojureScript code.
 
-#+BEGIN_SRC emacs-lisp
+
   (use-package clojure-mode
     :hook (clojure-mode . #'subword-mode))
-#+END_SRC
+
 
 CIDER is a Clojure interactive development environment and REPL for Emacs.
 
-#+BEGIN_SRC emacs-lisp
   (use-package cider)
-#+END_SRC
 
 * Encryption
 
