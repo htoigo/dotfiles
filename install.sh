@@ -42,6 +42,7 @@ install "$pkgs"
 # Now, stow the config files in the user's home directory.
 stow bash
 stow emacs
+stow spacemacs
 stow tmux
 stow vim
 
