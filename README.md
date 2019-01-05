@@ -13,7 +13,7 @@ Clone this repository wherever you like (I use `~/dotfiles`). Then make your
 current directory the newly created repo directory, and run the `install.sh`
 script from there.
 
-This will use GNU stow to "stow" (i.e., install) these config files in your home
+This will use GNU stow to _stow_ (i.e., install) these config files in your home
 directory. With GNU stow, your config files become symlinks from their usual
 locations to their locations within the dotfiles repo directory tree. The install
 script will install GNU stow, if it is not already on your machine.
