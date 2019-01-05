@@ -1,25 +1,21 @@
 Harry Toigo's dotfiles
-======================
+----------------------
 
 <cool image here>
 
-Requirements
-------------
+## Requirements
 
 Todo.
 
-Install
--------
+## Install
 
 Todo.
 
-Update
-------
+## Update
 
 Todo.
 
-License
--------
+## License
 
 These dotfiles are copyright © 2018 Harry H. Toigo II. They are free software, and may be
 redistributed under the terms specified in the [`LICENSE`] file.
