@@ -1,7 +1,7 @@
-# .profile:  for SUSE Linux
+# .bash_profile:  for SUSE Linux
 #
 # bash startup files  (3 different types):
-# 
+#
 # login shells:  (outside of X)
 #     /etc/profile  ->  ~/.profile
 #
@@ -32,5 +32,3 @@ if [ -x /usr/bin/fortune ] ; then
     /usr/bin/fortune
     echo
 fi
-
-PATH=$PATH:/home/harry/apps/010editor;export PATH; # ADDED BY INSTALLER - DO NOT EDIT OR DELETE THIS COMMENT - 87FF8EFC-483D-BCAA-D67D-735CF60410D1 12794B61-4123-E38C-C5AD-84BC521E49FE
