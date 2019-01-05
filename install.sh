@@ -29,8 +29,7 @@ install()
 
 
 # The list of packages we need to install.
-#
-# TODO: Possibly add other packages here, which we would like to have installed
+# Possibly add other packages here, which we would like to have installed
 # on this system.
 pkgs='
   stow
