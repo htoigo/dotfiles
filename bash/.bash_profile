@@ -27,6 +27,13 @@
 
 test -z "$PROFILEREAD" && . /etc/profile || true
 
+
+# When logging in over the serial console, run the resize function, since the
+# serial console window usually defaults to 24 rows x 80 cols, which is often
+# wrong nowadays.
+[ $(tty) = /dev/ttyS0 ] && resize
+
+
 if [ -x /usr/bin/fortune ] ; then
     echo
     /usr/bin/fortune
