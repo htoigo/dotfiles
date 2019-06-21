@@ -1,4 +1,4 @@
-Harry Toigo's dotfiles  <cool image here>
+Harry Toigo's dotfiles  ![Dotfiles Image](dotfiles.png)
 ----------------------
 
 My personal set of configuration files, collected here to put them under version
