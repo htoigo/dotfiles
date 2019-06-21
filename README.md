@@ -1,5 +1,4 @@
-Harry Toigo's dotfiles  ![Dotfiles Image](dotfiles.png)
-----------------------
+# Harry Toigo's dotfiles  ![Dotfiles Image](dotfiles.png)
 
 My personal set of configuration files, collected here to put them under version
 control and to facilitate transferring them to new machines.
