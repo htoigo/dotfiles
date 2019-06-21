@@ -1,7 +1,5 @@
-Harry Toigo's dotfiles
+Harry Toigo's dotfiles  <cool image here>
 ----------------------
-
-<cool image here>
 
 My personal set of configuration files, collected here to put them under version
 control and to facilitate transferring them to new machines.
