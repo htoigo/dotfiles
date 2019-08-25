@@ -34,6 +34,12 @@ test -z "$PROFILEREAD" && . /etc/profile || true
 [ $(tty) = /dev/ttyS0 ] && resize
 
 
+# Environment variables
+
+export SSH_ASKPASS=/usr/lib/ssh/ssh-askpass
+export SUDO_ASKPASS=/usr/lib/ssh/ssh-askpass
+
+
 if [ -x /usr/bin/fortune ] ; then
     echo
     /usr/bin/fortune

@@ -91,8 +91,7 @@ export LESS="MiR"
 
 ## SSH
 
-# TODO: May want to install package openssh-askpass-gnome, for a GNOME-based
-#passphrase dialog.  By default, a general X11 one was installed.
+# Environment variables are now set in .bash_profile.
 
 
 ## keychain
