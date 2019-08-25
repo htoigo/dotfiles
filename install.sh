@@ -41,6 +41,7 @@ install "$pkgs"
 # Now, install the config files in the user's home directory.
 
 stow bash
+stow dircolors
 stow emacs
 
 # Prepare a directory for Spacemacs before installing. We do this so that the
