@@ -65,6 +65,7 @@ if [[ -x /usr/bin/dircolors ]]; then
     [[ -r ~/.dircolors ]] && eval "$(dircolors ~/.dircolors)" || eval "$(dircolors)"
 fi
 
+
 ## less
 
 # Options to pass to less automatically
@@ -74,9 +75,11 @@ export LESS="MiR"
 #
 # SuSE uses input preprocessor lessopen.sh and postprocessor lessclose.sh
 # which use a temporary file, rather than an input pipe, such as lesspipe
-# in ubuntu. See $LESSOPEN, $LESSCLOSE, man less. 
-# grep
-#
+# in ubuntu. See $LESSOPEN, $LESSCLOSE, man less.
+
+
+## grep
+
 # Options to pass automatically
 #export GREP_OPTIONS=...
 #export GREP_COLORS=...
@@ -152,7 +155,7 @@ eval "$(stack --bash-completion-script stack)"
 # Use userpath() as the MATLAB startup folder.
 # Right now (the default) userpath() is set to: ~/Documents/MATLAB
 export MATLAB_USE_USERWORK=1
- 
+
 #export CHESSDIR="$HOME/.xboard"
 # For some news readers it makes sense to specify the NEWSSERVER variable here
 #export NEWSSERVER=your.news.server
@@ -160,8 +163,9 @@ export MATLAB_USE_USERWORK=1
 
 ## Bash aliases
 
-# ~/.alias is sourced (for all shells except ash) in /etc/bash.bashrc.
-#test -s ~/.alias && . ~/.alias || true
+# On openSUSE, ~/.alias is sourced (for all shells except ash) in
+# /etc/bash.bashrc. On Manjaro Linux, it is not, so we need to do it here.
+test -s ~/.alias && . ~/.alias || true
 
 
 PATH=$PATH:/home/harry/apps/010editor;export PATH; # ADDED BY INSTALLER - DO NOT EDIT OR DELETE THIS COMMENT - 87FF8EFC-483D-BCAA-D67D-735CF60410D1 12794B61-4123-E38C-C5AD-84BC521E49FE
