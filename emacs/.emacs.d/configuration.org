@@ -415,20 +415,36 @@ For finer control over package loading, you can use the variable
 `package-load-list', *but* it seems that =use-package= allows for even better
 control than `package-load-list' would, right?
 
+** Workaround for Emacs bug #34341
+
+ This manifests itself as the prompt: Buffer *elpa.gnu.org:431* has a running
+ process; kill it? It also produces an error: `Bad request' when trying to
+ download the package auctex, preventing us from installing it.
+
+ The bug report is at https://debbugs.gnu.org/34341. It apparently is due to the
+ function url-retrieve-synchronously returning a blank buffer, when it should
+ return a https / TLS response.
+
+ The workaround is to disable GNU TLS version 1.3:
+
+ #+BEGIN_SRC emacs-lisp
+ (setq gnutls-algoritm-priority "normal:-vers-tls1.3")
+ #+END_SRC
+
 ** Package Archives
 
-We use ELPA and MELPA.
+ We use ELPA and MELPA.
 
-#+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives
-                 '("gnu" . "https://elpa.gnu.org/packages/")))
-  (add-to-list 'package-archives
-               '("melpa" . "https://melpa.org/packages/") t)
-  (package-initialize)
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+ (require 'package)
+ (when (< emacs-major-version 24)
+   ;; For important compatibility libraries like cl-lib
+   (add-to-list 'package-archives
+                '("gnu" . "https://elpa.gnu.org/packages/")))
+ (add-to-list 'package-archives
+              '("melpa" . "https://melpa.org/packages/") t)
+ (package-initialize)
+ #+END_SRC
 
 * Configure =use-package=
 
