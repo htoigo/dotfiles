@@ -13,6 +13,7 @@
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-yasnippet elpy-module-django elpy-module-sane-defaults)))
+ '(org-babel-load-languages (quote ((emacs-lisp . t) (shell . t))))
  '(package-selected-packages
    (quote
     (clojure-mode mu4e which-key use-package-chords try solarized-theme smex slime org-bullets oauth2 jump-char intero fill-column-indicator elpy better-defaults auto-compile auctex ample-theme ace-jump-mode 2048-game)))
