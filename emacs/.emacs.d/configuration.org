@@ -1,4 +1,5 @@
 #+TITLE: Emacs Configuration
+
 #+AUTHOR: Harry H. Toigo
 #+EMAIL: hhtoigo@gmail.com
 #+OPTIONS: toc:nil num:nil
@@ -869,7 +870,6 @@ Use smtpmail for sending email.
 #+END_SRC
 
 * Software Development
-
 ** General
 
 Install Projectile for navigating swiftly inside projects.
@@ -893,12 +893,40 @@ Harry Schwartz sets ~projectile-global-mode~, in order to use Projectile everywh
 
 ** Python
 
-Use Elpy as our python IDE.
+ Use Elpy within Emacs as our python IDE.
 
-#+BEGIN_SRC emacs-lisp
-  (use-package elpy
-    :config (elpy-enable))
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+ (use-package elpy
+   :config (elpy-enable))
+ #+END_SRC
+
+ In order to use all of elpy's features, we may need to install some python
+ libraries. Run 'M-x elpy-config RET', and follow the instructions.
+
+ Elpy's key bindings for moving the region conflict with my preference for using
+ <M-up>, <M-down>, et al for moving between windows. There appears to be no easy
+ Customize settings in Elpy-config to change this, so we have to edit elpy.el
+ directly:
+
+ diff -u elpy.el.ORIG elpy.el
+ --- elpy.el.ORIG	2018-02-17 20:29:50.951248221 -0800
+ +++ elpy.el	2018-02-17 20:33:58.452453315 -0800
+ @@ -430,10 +430,10 @@
+      (define-key map (kbd "<C-left>") 'elpy-nav-backward-indent)
+      (define-key map (kbd "<C-right>") 'elpy-nav-forward-indent)
+
+ -    (define-key map (kbd "<M-down>") 'elpy-nav-move-line-or-region-down)
+ -    (define-key map (kbd "<M-up>") 'elpy-nav-move-line-or-region-up)
+ -    (define-key map (kbd "<M-left>") 'elpy-nav-indent-shift-left)
+ -    (define-key map (kbd "<M-right>") 'elpy-nav-indent-shift-right)
+ +    (define-key map (kbd "<M-S-down>") 'elpy-nav-move-line-or-region-down)
+ +    (define-key map (kbd "<M-S-up>") 'elpy-nav-move-line-or-region-up)
+ +    (define-key map (kbd "<M-S-left>") 'elpy-nav-indent-shift-left)
+ +    (define-key map (kbd "<M-S-right>") 'elpy-nav-indent-shift-right)
+
+      (if (not (fboundp 'xref-find-definitions))
+          (define-key map (kbd "M-.") 'elpy-goto-definition))
+ #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ** Haskell
 
@@ -954,7 +982,9 @@ it here for reference for now.
 
 * TeX and LaTeX
 
-AUCTeX makes Emacs into a great LaTeX editor.
+AUCTeX makes Emacs into a great LaTeX editor. The AUCTeX manual is available
+within Emacs via `F1 i d m AUCTeX RET'. The AUCTeX home page is at
+www.gnu.org/software/auctex.
 
 Make AUCTeX aware of style files and multi-file documents (using `\include' or
 `\input').
