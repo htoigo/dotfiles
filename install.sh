@@ -15,6 +15,34 @@
 # This script is modeled on Harry Schwartz's dotfiles repo, which is at
 # github.com/hrs.
 
+case $(uname | tr '[:upper:]' '[:lower:]') in
+  linux*)
+      if [ -f /etc/os-release ]; then
+          . /etc/os-release
+          os_id=$ID
+      fi
+      export os_name="linux-$os_id"
+      ;;
+  solaris*)
+      export os_name=solaris
+      ;;
+  darwin*)
+      export os_name=osx
+      ;;
+  msys*)
+      export os_name=windows
+      ;;
+  cygwin*)
+      export os_name=cygwin
+      ;;
+  mingw*)
+      export os_name=mingw
+      ;;
+  *)
+      export os_name=unknown
+      ;;
+esac
+
 
 # install() takes one argument, a string containing a list of package names, and
 # installs the packages named, using zypper.
@@ -22,9 +50,17 @@
 install()
 {
     # $1: string containing list of package names separated by white space
-    local pkgs=$1
+    local pkgs="$1"
 
-    echo $pkgs | xargs sudo zypper install
+    case $os_name in
+      linux-manjaro) install_cmd='pamac install --no-confirm' ;;
+      linux-*suse*)  install_cmd='sudo zypper install' ;;
+      *) echo "No install command defined for OS: $os_name"
+         return 1
+         ;;
+    esac
+
+    echo $pkgs | xargs $install_cmd
 }
 
 
