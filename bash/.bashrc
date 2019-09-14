@@ -44,8 +44,8 @@ shopt -s histappend
 # Don't put dup lines or lines starting with space in the history.
 export HISTCONTROL=ignoreboth
 export HISTIGNORE='#*:ls:ll:la:[bf]g:exit'
-export HISTSIZE=10000
-export HISTFILESIZE=10000
+export HISTSIZE=40000
+export HISTFILESIZE=40000
 
 
 ## Shell Prompt
