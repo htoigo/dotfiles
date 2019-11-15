@@ -80,12 +80,14 @@ stow bash
 stow dircolors
 stow emacs
 
+# Spacemacs
+#
 # Prepare a directory for Spacemacs before installing. We do this so that the
 # Spacemacs directory does not end up being a symlink to the dotfiles repo,
 # since we run Spacemacs with HOME=~/apps/spacemacs. That would result in
 # Spacemacs cluttering up the dotfiles repo with files it wants to save in HOME.
 mkdir -p ~/apps/spacemacs/.emacs.d
-git clone git@github.com:syl20bnr/spacemacs.git ~/apps/spacemacs/.emacs.d
+git clone https://github.com/syl20bnr/spacemacs.git ~/apps/spacemacs/.emacs.d
 stow spacemacs
 
 stow tmux
