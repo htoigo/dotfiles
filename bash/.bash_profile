@@ -28,9 +28,52 @@
 test -z "$PROFILEREAD" && . /etc/profile || true
 
 
-# When logging in over the serial console, run the resize function, since the
-# serial console window usually defaults to 24 rows x 80 cols, which is often
-# wrong nowadays.
+#
+# Resizing the Serial Console Window
+#
+
+# The serial console window often defaults to LINES=24 COLUMNS=80, which is
+# usually wrong these days. The following resize functions correct this. They
+# were found at
+#
+#   unix.stackexchange.com/questions/16578/resizable-serial-console-window/
+#
+# These scripts may be too slow, especially to be run after every command. If
+# that turns out to be the case, then we can instead use the `resize' program
+# from the xterm package.
+
+resize() {
+  # This function only uses ANSI escape codes.
+  old=$(stty -g)
+  stty raw -echo min 0 time 5
+
+  printf '\0337\033[r\033[999;999H\033[6n\0338' >/dev/tty
+  IFS='[;R' read -r _ rows cols _ </dev/tty
+
+  stty "$old"
+  # echo "cols:$cols"
+  # echo "rows:$rows"
+  stty cols "$cols" rows "$rows"
+}
+
+resize2() {
+  # This function uses an xterm-specific escape code for getting the size
+  # information we want. However, this escape code is also implemented in
+  # many other terminal emulators.
+  old=$(stty -g)
+  stty raw -echo min 0 time 5
+
+  printf '\033[18t' >/dev/tty
+  IFS=';t' read -r _ rows cols _ </dev/tty
+
+  stty "$old"
+  # echo "cols:$cols"
+  # echo "rows:$rows"
+  stty cols "$cols" rows "$rows"
+}
+
+# Detect whether we are logged in over the serial console, and if so, resize the
+# console window to match the actual screen size we have.
 [ $(tty) = /dev/ttyS0 ] && resize
 
 
