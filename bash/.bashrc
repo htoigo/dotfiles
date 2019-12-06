@@ -16,13 +16,28 @@
 # than here, since multilingual X sessions would not work properly if LANG is
 # over-ridden in every subshell.
 
-# Turn off XON/XOFF flow control for the terminal, so that C-s works for bash's
+
+# Bash functions & aliases
+#
+# Source this at the beginning, so that we can use functions defined in .alias
+# here.
+#
+# On openSUSE, ~/.alias is sourced (for all shells except ash) in
+# /etc/bash.bashrc. On Manjaro Linux, it is not, so we need to do it here.
+
+test -s ~/.alias && . ~/.alias || true
+
+
+# Turn off XON/XOFF flow control for the terminal, so C-s works for bash's
 # forward incr-history-search.
+#
 # NOTE: 'stty' applies to ttys, which you have for interactive sessions.  In
 # some cases (such as when ssh is given a specific command to run), this file
 # will be executed in sessions where stdin is not a tty.  This will result in
-# the error: stty: 'standard input': Inappropriate ioctl for device The
-# solution, other than moving commands like this to .profile, is to make
+# the error:
+#   stty: 'standard input': Inappropriate ioctl for device
+#
+# The solution, other than moving commands like this to .profile, is to make
 # execution conditional on our being in an interactive shell.
 
 [[ $- == *i* ]] && stty -ixon
@@ -111,11 +126,15 @@ export LESS="MiR"
 [[ -f ~/.keychain/$HOSTNAME-sh-gpg ]] && . ~/.keychain/$HOSTNAME-sh-gpg
 
 
-## Set the PATH
+## Adjust the PATH
 
-# Wrote /etc/profile.local, so it's done the way I want it there.
-# The following dirs were in the PATH on a previous installation:
-#export PATH="$PATH:/opt/VirtualGL/bin:$HOME/android/android-studio/bin"
+if test "$HOME" != "/" ; then
+    for dir in "$HOME/.local/bin/$CPU" "$HOME/.local/bin" ; do
+        test -d $dir && path_prepend $dir
+    done
+    unset dir
+    export PATH
+fi
 
 
 ## EDITOR
@@ -159,13 +178,3 @@ export MATLAB_USE_USERWORK=1
 #export CHESSDIR="$HOME/.xboard"
 # For some news readers it makes sense to specify the NEWSSERVER variable here
 #export NEWSSERVER=your.news.server
-
-
-## Bash aliases
-
-# On openSUSE, ~/.alias is sourced (for all shells except ash) in
-# /etc/bash.bashrc. On Manjaro Linux, it is not, so we need to do it here.
-test -s ~/.alias && . ~/.alias || true
-
-
-PATH=$PATH:/home/harry/apps/010editor;export PATH; # ADDED BY INSTALLER - DO NOT EDIT OR DELETE THIS COMMENT - 87FF8EFC-483D-BCAA-D67D-735CF60410D1 12794B61-4123-E38C-C5AD-84BC521E49FE
