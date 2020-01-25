@@ -161,6 +161,11 @@ export MATLAB_USE_USERWORK=1
 #export NEWSSERVER=your.news.server
 
 
+# Pipenv
+
+export PIPENV_VENV_IN_PROJECT=1
+
+
 ## Bash aliases
 
 # On openSUSE, ~/.alias is sourced (for all shells except ash) in

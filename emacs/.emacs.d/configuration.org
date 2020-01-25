@@ -897,7 +897,9 @@ Harry Schwartz sets ~projectile-global-mode~, in order to use Projectile everywh
 
  #+BEGIN_SRC emacs-lisp
  (use-package elpy
-   :config (elpy-enable))
+   :ensure t
+   :defer t
+   :init (advice-add 'python-mode :before 'elpy-enable))
  #+END_SRC
 
  In order to use all of elpy's features, we may need to install some python
