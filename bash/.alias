@@ -10,6 +10,16 @@
 # within them, changing 'mv' to 'mv -i', etc.
 
 
+# Compute fingerprints of ssh keys in files.
+
+fgrprs() {
+  local file="${1:-$HOME/.ssh/authorized_keys}"
+  while read l; do
+    [[ -n $l && ${l###} = $l ]] && echo $l | ssh-keygen -lf -
+  done < "${file}"
+}
+
+
 #
 # Resizing the Serial Console Window
 #
