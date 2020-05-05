@@ -164,8 +164,14 @@ export XDG_CACHE_HOME=$HOME/.cache
 [[ -r ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs ]] && . ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs
 
 
-## Haskell Stack auto-completion
+## Haskell
 
+# If we installed Haskell Platform via ghcup, adjust the PATH to include the
+# directories where ghcup puts the ghc and cabal binaries.
+
+[[ -r "$HOME/.ghcup/env" ]] && . "$HOME/.ghcup/env"
+
+## Enable Haskell Stack auto-completion
 eval "$(stack --bash-completion-script stack)"
 
 
