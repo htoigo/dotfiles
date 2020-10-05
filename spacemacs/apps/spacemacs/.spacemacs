@@ -318,10 +318,10 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  (setq theming-modifications
-        ;; "#eedc82" is LightGoldenrod2
-        '((spacemacs-dark (sh-heredoc :foreground "#eedc82"))))
-  )
+  (setq
+   ;; Change color of here docs in shell script to LightGoldenrod2 (#eedc82)
+   theming-modifications '((spacemacs-dark (sh-heredoc :foreground "#eedc82")))
+   ))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
