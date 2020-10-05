@@ -137,10 +137,9 @@ if test "$HOME" != "/" ; then
 fi
 
 
-## EDITOR
+## Set our preferred text editor.
 
-export EDITOR=emacs
-export VISUAL=emacs
+export EDITOR="emacsclient -c"
 
 
 ## Input Methods
