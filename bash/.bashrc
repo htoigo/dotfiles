@@ -162,10 +162,12 @@ export XDG_CACHE_HOME=$HOME/.cache
 
 ## Haskell
 
-# If we installed Haskell Platform via ghcup, adjust the PATH to include the
-# directories where ghcup puts the ghc and cabal binaries.
-
-[[ -r "$HOME/.ghcup/env" ]] && . "$HOME/.ghcup/env"
+# We installed Haskell Platform via =ghcup=, so adjust the PATH to include the
+# directories where =ghcup= puts the =ghc= and =cabal= binaries. We do this
+# manually rather than sourcing ~/.ghcup/env as that file adds these directories
+# to the beginning of PATH, and we want them added to the end for better
+# security.
+PATH="$PATH:$HOME/.cabal/bin:$HOME/.ghcup/bin"
 
 ## Enable Haskell Stack auto-completion
 eval "$(stack --bash-completion-script stack)"
@@ -182,6 +184,21 @@ export MATLAB_USE_USERWORK=1
 #export NEWSSERVER=your.news.server
 
 
-# Pipenv
+## Python
 
+# We are using =pipenv= to manage Python virtual environments. Keep Python
+# virtual environments in the directories of their projects.
 export PIPENV_VENV_IN_PROJECT=1
+
+
+## Ruby & Ruby Gems
+
+# We want to install all Ruby Gems to our user installation directory,
+# ~/.gem/ruby/2.7.0/. So we set the environment variable GEM_HOME, which
+# specifies the location of the system installation directory, to point to our
+# user installation directory.
+export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
+
+# Consequently, the commands provided by Gems end up in ~/.gem/ruby/2.7.0/bin.
+# Add this directory to the PATH.
+PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
