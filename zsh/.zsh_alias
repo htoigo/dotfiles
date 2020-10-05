@@ -1,0 +1,35 @@
+# .zsh_alias --- ZSH alias file
+#
+# This file contains all aliases, to be sourced by interactive shells.
+
+# Use ls --hide instead of -B because --hide can be overridden by -a & -A
+#alias ls='ls --hide=*~ --color=auto'
+
+alias lsc='ls --color=always'
+alias ls='ls --color=auto'
+alias la='ls -A'
+alias ll='ls -lF'
+alias lla='ls -lFA'
+alias l='ls -CF'
+alias lf='ls -F'
+
+alias po=popd
+alias pu=pushd
+alias rm='rm -I'
+alias cp='cp -i'
+alias mv='mv -i'
+alias df='df -h'
+alias free='free -h'
+alias grep='grep -E --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias lolcat=lolcat.ruby2.1
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# for ssh-agent
+alias keyon='ssh-add -t 10800'
+alias keyoff='ssh-add -D'
+alias keylist='ssh-add -l'

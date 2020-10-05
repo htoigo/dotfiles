@@ -79,6 +79,13 @@ install "$pkgs"
 stow bash
 stow dircolors
 stow emacs
+stow tmux
+stow vim
+
+# Create the following path so that it does not become a link to the dotfiles
+# repo. We just want the individual zsh function files to be links.
+mkdir -p ~/.local/share/zsh/functions
+stow zsh
 
 # Spacemacs
 #
@@ -89,8 +96,5 @@ stow emacs
 mkdir -p ~/apps/spacemacs/.emacs.d
 git clone https://github.com/syl20bnr/spacemacs.git ~/apps/spacemacs/.emacs.d
 stow spacemacs
-
-stow tmux
-stow vim
 
 # install.sh ends here
