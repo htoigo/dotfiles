@@ -19,13 +19,13 @@
 
 # Bash functions & aliases
 #
-# Source this at the beginning, so that we can use functions defined in .alias
-# here.
+# Source this at the beginning, so that we can use functions defined in
+# .bash_alias here.
 #
 # On openSUSE, ~/.alias is sourced (for all shells except ash) in
 # /etc/bash.bashrc. On Manjaro Linux, it is not, so we need to do it here.
 
-test -s ~/.alias && . ~/.alias || true
+test -s ~/.bash_alias && . ~/.bash_alias || true
 
 
 # Turn off XON/XOFF flow control for the terminal, so C-s works for bash's
