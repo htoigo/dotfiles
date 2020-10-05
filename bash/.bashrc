@@ -142,13 +142,10 @@ fi
 export EDITOR="emacsclient -c"
 
 
-## Input Methods
-
-# TODO: Uncomment the following after setting up fcitx:
-# export GTK_IM_MODULE=fcitx
-# export XMODIFIERS="@im=fcitx"
-# export QT_IM_MODULE=fcitx
-
+## Asian language input method support
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
 
 ## XDG desktop config
 
