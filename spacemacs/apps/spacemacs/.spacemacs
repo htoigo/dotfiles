@@ -333,7 +333,7 @@ you should place your code here."
   (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
   (setq
    make-backup-files t
-   backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+   backup-directory-alist `(("." . ,(expand-file-name "~/backups")))
    ))
 
 ;; Do not write anything past this comment. This is where Emacs will
