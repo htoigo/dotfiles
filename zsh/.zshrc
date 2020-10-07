@@ -64,7 +64,7 @@ setopt hist_verify
 
 # A special function to start Spacemacs with its own HOME directory so it
 # doesn't mix up its files with our regular Emacs config in ~/.emacs.d/.
-autoload -Uz spacemacs
+autoload -U spacemacs
 
 
 # Theming

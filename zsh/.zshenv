@@ -1,7 +1,7 @@
 # .zshenv --- ZSH environment file
 
 # Add my personal zsh functions directory to fpath.
-fpath=(~/.local/share/zsh/functions $fpath)
+fpath=(~/.zsh_fns $fpath)
 
 # For now, we need ~/.local/bin to be before /usr/local/bin because of how
 # =stack= works. ~/.local/bin is added to the PATH by
