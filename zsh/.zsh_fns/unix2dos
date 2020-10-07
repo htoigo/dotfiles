@@ -1,0 +1,11 @@
+# Function to convert unix text file line endings to msdos line endings.
+# Given no arguments, it filters stdin to stdout.
+# Otherwise, each argument is the name of a file to be converted in place.
+
+if [ $# -eq 0 ]; then
+  # filter mode; use stdin & stdout
+  sed -e '/^$\|[^\r]$/ s/$/\r/'
+else
+  # filename(s) were entered, convert each file in-place
+  sed -i~ -e '/^$\|[^\r]$/ s/$/\r/' "$@"
+fi

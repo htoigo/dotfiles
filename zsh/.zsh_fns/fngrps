@@ -1,0 +1,9 @@
+# Compute fingerprints of all ssh keys in the given file, or in no file given,
+# in the file ~/.ssh/authorized_keys.
+
+local file="${1:-$HOME/.ssh/authorized_keys}"
+while read line; do
+  [[ -n $line && $line != \#* ]] && print $line | ssh-keygen -lf -
+done  < "${file}"
+
+unset file line

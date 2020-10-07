@@ -67,6 +67,10 @@ setopt hist_verify
 autoload -U spacemacs
 
 
+# Set up our other custom functions for autoloading.
+autoload -U glp sens fngrps dos2unix unix2dos
+
+
 # Theming
 
 autoload -U compinit colors zcalc

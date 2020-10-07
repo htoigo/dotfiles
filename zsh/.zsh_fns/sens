@@ -1,0 +1,3 @@
+# Function to display all hardware sensor readings.
+
+while true; do clear; sensors; sleep ${1:-3}; done

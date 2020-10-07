@@ -1,0 +1,5 @@
+# Function to lookup passwords in our master password file.
+
+# $@: params may be additional grep options followed by search patterns.
+
+gpg -d $HOME/logins.gpg 2>/dev/null | grep -E -i "$@" | less
