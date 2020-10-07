@@ -82,9 +82,9 @@ stow emacs
 stow tmux
 stow vim
 
-# Create the following path so that it does not become a link to the dotfiles
-# repo. We just want the individual zsh function files to be links.
-mkdir -p ~/.local/share/zsh/functions
+# Create the zsh functions directory so that it does not become a link to the
+# dotfiles repo. We just want the individual zsh function files to be links.
+mkdir -p ~/.zsh_fns
 stow zsh
 
 # Spacemacs
