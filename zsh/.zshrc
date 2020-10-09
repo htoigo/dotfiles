@@ -1,5 +1,22 @@
 # .zshrc --- ZSH configuration for interactive shells.
 
+# Any settings that will not confuse dumb terminals go here.
+
+# Dumb terminal bailout.
+
+# If a dumb terminal is connecting, disable ZLE, set a very simple prompt and
+# abort before we do any fancy setup which activates things like escape
+# sequences for clorized output, right-hand side prompt, etc.
+
+# This includes Emacs Tramp, which sets $TERM to 'dumb'. Emacs Tramp needs to
+# recognize the shell prompt (via regex search) for accurate parsing of shell
+# responses. Escape sequences for coloring and other fancy stuff such as zsh
+# line editor's (ZLE) right-hand side prompts (gasp!) seriously confuse Tramp
+# and can prevent it from connecting.
+
+[[ $TERM = "dumb" ]] && unsetopt zle && PROMPT='> ' && return
+
+
 # Source manjaro-zsh-configuration
 # if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
 #   source /usr/share/zsh/manjaro-zsh-config
@@ -19,7 +36,6 @@ setopt auto_pushd
 setopt pushd_ignore_dups
 
 setopt rc_expand_param
-
 
 # Don't send the HUP signal to running jobs when this interactive shell exits.
 setopt no_hup
