@@ -2,12 +2,12 @@
 
 # Any settings that will not confuse dumb terminals go here.
 
-# Dumb terminal bailout.
-
+# Dumb terminal bailout:
+#
 # If a dumb terminal is connecting, disable ZLE, set a very simple prompt and
 # abort before we do any fancy setup which activates things like escape
 # sequences for clorized output, right-hand side prompt, etc.
-
+#
 # This includes Emacs Tramp, which sets $TERM to 'dumb'. Emacs Tramp needs to
 # recognize the shell prompt (via regex search) for accurate parsing of shell
 # responses. Escape sequences for coloring and other fancy stuff such as zsh
@@ -87,19 +87,24 @@ autoload -U spacemacs
 autoload -U glp sens fngrps dos2unix unix2dos
 
 
+# Use autosuggestions, à la fish shell.
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+
+
 # Theming
 
-autoload -U compinit colors zcalc
+autoload -Uz compinit colors zcalc
 compinit -d
 colors
 
 
 # Prompt
 
-# Use manjaro zsh prompt
-if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
-  source /usr/share/zsh/manjaro-zsh-prompt
-fi
+autoload -Uz promptinit
+promptinit
+prompt harry
 
 
 # less
@@ -144,3 +149,8 @@ fi
 if [[ -r ~/.zsh_alias ]]; then
     source ~/.zsh_alias
 fi
+
+
+# Show the user some system information when an interactive shell is started.
+
+print $USER@$HOST  $(uname -srm) $(lsb_release -rcs)
