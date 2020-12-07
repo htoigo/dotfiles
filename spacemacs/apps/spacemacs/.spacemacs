@@ -65,6 +65,7 @@ This function should only modify configuration layer settings."
             web-mode-code-indent-offset 2)
      ruby
      (shell :variables
+            sh-basic-offset 2
             shell-default-height 30
             shell-default-position 'bottom)
      ;; spell-checking
@@ -523,9 +524,14 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
   (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
+
   (setq
    make-backup-files t
+   ;; The following assumes that we run spacemacs with $HOME set to
+   ;; ~/apps/spacemacs, so that "~/backups" here expands to
+   ;; $HOME/apps/spacemacs/backups.
    backup-directory-alist `(("." . ,(expand-file-name "~/backups")))
    )
 
