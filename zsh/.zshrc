@@ -111,8 +111,9 @@ prompt harry
 
 # Options to pass to less automatically.
 export LESS=iMR
+# Set up an input pipe for less
+export LESSOPEN="||lesspipe.zsh %s"
 
-# TODO: setup less input pipe, lesspipe.
 
 # Color man pages
 export LESS_TERMCAP_mb=$'\E[01;32m'
