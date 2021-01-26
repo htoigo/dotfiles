@@ -1,0 +1,5 @@
+# mkcd function --- create new directory and cd into it
+
+# $@: directories to be created; will cd into the first one given
+
+mkdir -vp "$@" && cd "$1"

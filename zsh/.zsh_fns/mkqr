@@ -1,0 +1,8 @@
+# mkqr function --- generate a QR code from an input string
+
+# args:
+#   $@:  all positional params are passed to printf individually quoted, so the
+#        first would be the format string and the rest values referenced in the
+#        format string.
+
+printf "$@" | curl -F-=\<- qrenco.de

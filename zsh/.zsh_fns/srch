@@ -1,0 +1,7 @@
+# srch function --- search for text in files recursively
+
+# args:
+#   $1:  the regex to search for; can actually contain multiple regexs,
+#        separated by newline characters
+
+grep -E -r -i -I -Hn --color=always "$1" . | less -R

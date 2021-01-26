@@ -33,3 +33,5 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias keyon='ssh-add -t 10800'
 alias keyoff='ssh-add -D'
 alias keylist='ssh-add -l'
+
+alias dutop='du -sh * | sort -hr | head -n20'
