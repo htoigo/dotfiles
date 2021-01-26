@@ -74,15 +74,18 @@ This function should only modify configuration layer settings."
      theming
      ;; version-control
      treemacs
+     (typography :variables
+                 typography-enable-typographic-editing t)
      yaml)
 
 
-   ;; List of additional packages that will be installed without being
-   ;; wrapped in a layer. If you need some configuration for these
-   ;; packages, then consider creating a layer. You can also put the
-   ;; configuration in `dotspacemacs/user-config'.
-   ;; To use a local version of a package, use the `:location' property:
-   ;; '(your-package :location "~/path/to/your-package/")
+   ;; List of additional packages that will be installed without being wrapped
+   ;; in a layer (generally the packages are installed only and should still be
+   ;; loaded using load/require/use-package in the user-config section below in
+   ;; this file). If you need some configuration for these packages, then
+   ;; consider creating a layer. You can also put the configuration in
+   ;; `dotspacemacs/user-config'. To use a local version of a package, use the
+   ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(evil-smartparens)
 
@@ -199,9 +202,13 @@ It should only modify the values of Spacemacs settings."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
+   ;; The exceptional case is `recents-by-project', where list-type must be a
+   ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
+   ;; number is the project limit and the second the limit on the recent files
+   ;; within a project.
    dotspacemacs-startup-lists '((recents . 5)
                                 (projects . 7))
 
@@ -215,6 +222,14 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
+
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent nil
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable nil
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -239,7 +254,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font or prioritized list of fonts.
+   ;; Default font or prioritized list of fonts. The `:size' can be specified as
+   ;; a non-negative integer (pixel size), or a floating-point (point size).
+   ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
                                :size 10.0
                                :weight normal
@@ -397,7 +414,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-line-numbers nil
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
@@ -457,6 +474,9 @@ It should only modify the values of Spacemacs settings."
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
+
+   ;; Show trailing whitespace (default t)
+   dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -584,7 +604,7 @@ This function is called at the very end of Spacemacs initialization."
      ("ss" . "src sh")
      ("v" . "verse")))
  '(package-selected-packages
-   '(tern yasnippet-snippets yapfify yaml-mode xterm-color web-mode web-beautify vterm unfill treemacs-magit terminal-here tagedit sphinx-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe rjsx-mode rbenv rake pytest pyenv-mode py-isort pug-mode psci purescript-mode psc-ide prettier-js pippel pipenv pyvenv pip-requirements orgit org-rich-yank org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-brain nodejs-repl mwim multi-term mmm-mode minitest markdown-toc magit-svn magit-section magit-gitflow magit-popup lsp-haskell lsp-mode markdown-mode dash-functional livid-mode skewer-mode live-py-mode json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc importmagic epc ctable concurrent deferred impatient-mode simple-httpd htmlize hlint-refactor hindent helm-pydoc helm-org-rifle helm-hoogle helm-gitignore helm-git-grep helm-css-scss helm-company helm-cider helm-c-yasnippet haskell-snippets haml-mode gnuplot gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip pos-tip flycheck-haskell evil-snipe evil-smartparens evil-org evil-magit magit git-commit with-editor transient eshell-z eshell-prompt-extras esh-help emmet-mode dante lcr haskell-mode cython-mode company-web web-completion-data company-cabal company-anaconda company cmm-mode clojure-snippets cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a chruby bundler inf-ruby blacken auto-yasnippet yasnippet attrap anaconda-mode pythonic ac-ispell auto-complete ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection spaceline-all-the-icons restart-emacs request rainbow-delimiters popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag google-translate golden-ratio font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav editorconfig dumb-jump dotenv-mode diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
+   '(typo tern yasnippet-snippets yapfify yaml-mode xterm-color web-mode web-beautify vterm unfill treemacs-magit terminal-here tagedit sphinx-doc smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe rjsx-mode rbenv rake pytest pyenv-mode py-isort pug-mode psci purescript-mode psc-ide prettier-js pippel pipenv pyvenv pip-requirements orgit org-rich-yank org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-brain nodejs-repl mwim multi-term mmm-mode minitest markdown-toc magit-svn magit-section magit-gitflow magit-popup lsp-haskell lsp-mode markdown-mode dash-functional livid-mode skewer-mode live-py-mode json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc importmagic epc ctable concurrent deferred impatient-mode simple-httpd htmlize hlint-refactor hindent helm-pydoc helm-org-rifle helm-hoogle helm-gitignore helm-git-grep helm-css-scss helm-company helm-cider helm-c-yasnippet haskell-snippets haml-mode gnuplot gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip pos-tip flycheck-haskell evil-snipe evil-smartparens evil-org evil-magit magit git-commit with-editor transient eshell-z eshell-prompt-extras esh-help emmet-mode dante lcr haskell-mode cython-mode company-web web-completion-data company-cabal company-anaconda company cmm-mode clojure-snippets cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a chruby bundler inf-ruby blacken auto-yasnippet yasnippet attrap anaconda-mode pythonic ac-ispell auto-complete ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection spaceline-all-the-icons restart-emacs request rainbow-delimiters popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag google-translate golden-ratio font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav editorconfig dumb-jump dotenv-mode diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
