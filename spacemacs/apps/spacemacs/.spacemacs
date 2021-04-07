@@ -52,7 +52,7 @@ This function should only modify configuration layer settings."
      (javascript :variables
                  js2-basic-offset 2
                  js-indent-level 2)
-     ;; lsp
+     lsp
      markdown
      multiple-cursors
      (org :variables
