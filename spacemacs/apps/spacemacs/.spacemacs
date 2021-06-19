@@ -64,6 +64,7 @@ This function should only modify configuration layer settings."
             web-mode-css-indent-offset 2
             web-mode-code-indent-offset 2)
      ruby
+     rust
      (shell :variables
             sh-basic-offset 2
             shell-default-height 30
