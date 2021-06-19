@@ -82,6 +82,13 @@ resize2() {
 export SSH_ASKPASS=/usr/lib/ssh/ssh-askpass
 export SUDO_ASKPASS=/usr/lib/ssh/ssh-askpass
 
+# Set up Nix environment variables.
+if [ -e /home/harry/.nix-profile/etc/profile.d/nix.sh ]; then
+  . /home/harry/.nix-profile/etc/profile.d/nix.sh
+fi
+
+
+# Show the user their fortune.
 
 if [ -x /usr/bin/fortune ] ; then
     echo

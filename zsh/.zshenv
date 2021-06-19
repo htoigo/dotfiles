@@ -30,9 +30,17 @@ export GPG_TTY="$(tty)"
 # We installed Haskell Platform via =ghcup=, so adjust the PATH to include the
 # directories where =ghcup= puts the =ghc= and =cabal= binaries. We do this
 # manually rather than sourcing ~/.ghcup/env as that file adds these directories
-# to the beginning of PATH, and we want them added to the end for better
-# security.
-PATH="$PATH:$HOME/.cabal/bin:$HOME/.ghcup/bin"
+# to the beginning of PATH, and it puts ~/.cabal/bin before ~/.ghcup/bin, and we
+# want them added to the end for better security, and also want ~/.ghcup/bin to
+# be BEFORE ~/.cabal/bin so that ghcup's programs are preferred.
+export PATH="$PATH:${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/bin:$HOME/.cabal/bin"
+
+# Nix package manager
+
+# Set up environment variables.
+if [ -e /home/harry/.nix-profile/etc/profile.d/nix.sh ]; then
+  . /home/harry/.nix-profile/etc/profile.d/nix.sh
+fi
 
 # Python
 
