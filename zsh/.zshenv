@@ -51,3 +51,9 @@ export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
 # Consequently, the commands provided by Gems end up in ~/.gem/ruby/2.7.0/bin.
 # Add this directory to the PATH.
 PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
+
+# Rust
+
+# Setup environment vars for cargo. Right now (2021-05), this only adds cargo's
+# bin directory to the PATH.
+. "$HOME/.cargo/env"
