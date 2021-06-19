@@ -2,6 +2,8 @@
 
 # Any settings that will not confuse dumb terminals go here.
 
+# ...
+
 # Dumb terminal bailout:
 #
 # If a dumb terminal is connecting, disable ZLE, set a very simple prompt and
@@ -143,6 +145,11 @@ if [[ -r /usr/share/doc/pkgfile/command-not-found.zsh ]]; then
     source /usr/share/doc/pkgfile/command-not-found.zsh
     export PKGFILE_PROMPT_INSTALL_MISSING=1
 fi
+
+
+# nvm - Node.js version manager
+
+. /usr/share/nvm/init-nvm.sh
 
 
 # Aliases

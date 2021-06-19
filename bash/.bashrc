@@ -160,6 +160,11 @@ export XDG_CACHE_HOME=$HOME/.cache
 [[ -r ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs ]] && . ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs
 
 
+## nvm - Node.js version manager
+
+. /usr/share/nvm/init-nvm.sh
+
+
 ## Haskell
 
 # We installed Haskell Platform via =ghcup=, so adjust the PATH to include the
