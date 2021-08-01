@@ -162,7 +162,9 @@ export XDG_CACHE_HOME=$HOME/.cache
 
 ## nvm - Node.js version manager
 
-. /usr/share/nvm/init-nvm.sh
+if [[ -r /usr/share/nvm/init-nvm.sh ]]; then
+  . /usr/share/nvm/init-nvm.sh
+fi
 
 
 ## Haskell
@@ -172,10 +174,14 @@ export XDG_CACHE_HOME=$HOME/.cache
 # manually rather than sourcing ~/.ghcup/env as that file adds these directories
 # to the beginning of PATH, and we want them added to the end for better
 # security.
-PATH="$PATH:$HOME/.cabal/bin:$HOME/.ghcup/bin"
+if [[ -d "$HOME/.cabal/bin" && -d "$HOME/.ghcup/bin" ]]; then
+  PATH="$PATH:$HOME/.cabal/bin:$HOME/.ghcup/bin"
+fi
 
 ## Enable Haskell Stack auto-completion
-eval "$(stack --bash-completion-script stack)"
+if command -v stack >/dev/null; then
+  eval "$(stack --bash-completion-script stack)"
+fi
 
 
 ## MATLAB
