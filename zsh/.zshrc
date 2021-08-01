@@ -149,7 +149,9 @@ fi
 
 # nvm - Node.js version manager
 
-. /usr/share/nvm/init-nvm.sh
+if [[ -r /usr/share/nvm/init-nvm.sh ]]; then
+  . /usr/share/nvm/init-nvm.sh
+fi
 
 
 # Aliases
