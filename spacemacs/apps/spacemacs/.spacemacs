@@ -57,6 +57,7 @@ This function should only modify configuration layer settings."
      multiple-cursors
      (org :variables
           org-babel-load-languages '((emacs-lisp . t) (shell . t)))
+     prettier
      purescript
      python
      (react :variables

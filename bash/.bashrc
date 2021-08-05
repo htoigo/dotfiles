@@ -142,11 +142,6 @@ fi
 export EDITOR="emacsclient -c"
 
 
-## Asian language input method support
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
-
 ## XDG desktop config
 
 # See: /etc/xdg/ and programs xdg-user-dirs-*

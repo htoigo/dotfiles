@@ -15,11 +15,6 @@ fpath=(~/.zsh_fns $fpath)
 # Set our preferred editor.
 export EDITOR="emacsclient -c"
 
-# Asian language input method support.
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
-
 # GnuPG
 
 # It is important that GPG_TTY always reflects the output of the 'tty' command.
