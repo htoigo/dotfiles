@@ -78,9 +78,15 @@ install "$pkgs"
 
 stow bash
 stow dircolors
-stow emacs
 stow tmux
 stow vim
+
+# Create the .emacs.d directory in case it doesn't already exist, otherwise
+# when we stow emacs it will become a link into the dotfiles repo, and when
+# emacs runs it will store stuff there. We just want individual config files 
+# to be links into the dotfiles repo.
+mkdir -p ~/.emacs.d
+stow emacs
 
 # Create the zsh functions directory so that it does not become a link to the
 # dotfiles repo. We just want the individual zsh function files to be links.
