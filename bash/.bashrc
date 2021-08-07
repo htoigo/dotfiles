@@ -142,24 +142,26 @@ fi
 export EDITOR="emacsclient -c"
 
 
-## XDG desktop config
+## XDG Spec Config
 
-# See: /etc/xdg/ and programs xdg-user-dirs-*
+# There are also settings in: /etc/xdg/ and programs xdg-user-dirs-*
+# See: https://specifications.freedesktop.org
 
-export XDG_DATA_HOME=$HOME/.local/share
-# XDG_DATA_DIRS
-export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CONFIG_HOME="$HOME/.config"
 # XDG_CONFIG_DIRS
-export XDG_CACHE_HOME=$HOME/.cache
-# xdg well-known user directories
+export XDG_DATA_HOME="$HOME/.local/share"
+# XDG_DATA_DIRS
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+# Set up XDG well-known user directories
 [[ -r ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs ]] && . ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs
 
 
 ## nvm - Node.js version manager
 
-if [[ -r /usr/share/nvm/init-nvm.sh ]]; then
-  . /usr/share/nvm/init-nvm.sh
-fi
+export NVM_DIR="$HOME/.nvm"
+[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"                    # This loads nvm
+[[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 
 ## Haskell
