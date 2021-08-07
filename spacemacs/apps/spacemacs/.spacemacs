@@ -50,6 +50,11 @@ This function should only modify configuration layer settings."
      (html :variables
            css-indent-offset 2)
      (javascript :variables
+                 javascript-backend 'lsp
+                 js2-mode-show-strict-warnings nil
+                 js2-mode-show-parse-errors nil
+                 javascript-fmt-tool 'prettier
+                 javascript-fmt-on-save t
                  js2-basic-offset 2
                  js-indent-level 2)
      lsp
@@ -76,6 +81,11 @@ This function should only modify configuration layer settings."
      theming
      ;; version-control
      treemacs
+     (typescript :variables
+                 typescript-backend 'lsp
+                 typescript-fmt-on-save t
+                 typescript-fmt-tool 'prettier
+                 typescript-linter 'tslint)
      (typography :variables
                  typography-enable-typographic-editing t)
      yaml)
