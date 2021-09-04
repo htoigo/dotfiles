@@ -102,12 +102,12 @@ mkdir -p ~/.emacs-configs/spacemacs
 git clone -b develop https://github.com/syl20bnr/spacemacs.git ~/.emacs-configs/spacemacs
 # Stow the vanilla Emacs config
 stow emacs
-# IMPORTANT: you probably want to start Spacemacs before doing the stow
-# spacemacs command below, so that it creates a new .spacemacs file with the
-# latest updates. Then compare this new .spacemacs file with my old one in the
-# dotfiles repo and merge changes.
+# IMPORTANT: Before doing the 'stow spacemacs' command below, you should run
+# Spacemacs so that it creates a fresh .spacemacs file with the latest updates.
+# Then compare this new .spacemacs file with the old one in the dotfiles repo
+# and merge changes.
 stow spacemacs
-# Below modify the link target to set the config you want to use:
+# Modify the link target to the config you want to use:
 ln -s .emacs-configs/spacemacs ~/.emacs.d
 
 
