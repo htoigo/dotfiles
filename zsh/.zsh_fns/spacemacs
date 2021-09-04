@@ -1,5 +1,0 @@
-# Function to launch Spacemacs with HOME set to its own special directory so
-# that when it stores stuff in $HOME/.emacs.d, it doesn't clobber our regular
-# Emacs config in $HOME/.emacs.d/.
-
-HOME=~/apps/spacemacs emacs "$@"
