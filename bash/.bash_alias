@@ -79,15 +79,6 @@ nvid-set () {
 }
 
 
-# Start spacemacs with $HOME set to ~/apps/spacemacs so that it stores its stuff
-# in the ~/apps/spacemacs/.emacs.d directory, rather than in ~/.emacs.d, which
-# is for GNU Emacs.
-
-spacemacs() {
-  HOME=~/apps/spacemacs emacs "$@"
-}
-
-
 ## Maintain a file with all passwords
 
 # Search the password file
