@@ -108,7 +108,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(evil-smartparens)
+   dotspacemacs-additional-packages '(evil-smartparens nvm)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -592,6 +592,9 @@ before packages are loaded."
 
   (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
 
+  (use-package nvm
+    :defer t)
+
   (setq
    make-backup-files t
    ;; We want all backups to go into the 'backups' subdirectory of the
@@ -620,6 +623,7 @@ before packages are loaded."
 
   (global-set-key (kbd "M-<up>") 'move-line-up)
   (global-set-key (kbd "M-<down>") 'move-line-down))
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
