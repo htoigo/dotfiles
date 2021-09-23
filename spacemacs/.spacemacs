@@ -48,7 +48,10 @@ This function should only modify configuration layer settings."
      haskell
      helm
      (html :variables
-           css-indent-offset 2)
+           css-enable-lsp t
+           css-indent-offset 2
+           html-enable-lsp t
+           web-fmt-tool 'prettier)
      (javascript :variables
                  javascript-backend 'lsp
                  javascript-lsp-linter nil
@@ -57,7 +60,8 @@ This function should only modify configuration layer settings."
                  javascript-fmt-tool 'prettier
                  javascript-fmt-on-save t
                  js2-basic-offset 2
-                 js-indent-level 2)
+                 js-indent-level 2
+                 node-add-modules-path t)
      lsp
      markdown
      multiple-cursors
@@ -76,7 +80,8 @@ This function should only modify configuration layer settings."
      (react :variables
             web-mode-markup-indent-offset 2
             web-mode-css-indent-offset 2
-            web-mode-code-indent-offset 2)
+            web-mode-code-indent-offset 2
+            web-mode-attr-indent-offset 2)
      ruby
      rust
      (shell :variables
