@@ -847,15 +847,15 @@ packages in the openSUSE repos, and we have installed these via zypper.
 Use mu4e as our mail user agent.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package mu4e
-    :ensure nil
-    :custom (mail-user-agent 'mu4e-user-agent)
-            (mu4e-maildir "~/Maildir")        ; Fs path, no symlink.
-                                              ; Other folders are relative to
-                                              ; mu4e-maildir.
-            (mu4e-sent-folder "/Sent Mail")   ; Removed the [Gmail] prefix here
-            (mu4e-drafts-folder "/Drafts")    ; ditto
-            (mu4e-trash-folder "/Trash"))     ; ditto
+;;  (use-package mu4e
+;;    :ensure nil
+;;    :custom (mail-user-agent 'mu4e-user-agent)
+;;            (mu4e-maildir "~/Maildir")        ; Fs path, no symlink.
+;;                                              ; Other folders are relative to
+;;                                              ; mu4e-maildir.
+;;            (mu4e-sent-folder "/Sent Mail")   ; Removed the [Gmail] prefix here
+;;            (mu4e-drafts-folder "/Drafts")    ; ditto
+;;            (mu4e-trash-folder "/Trash"))     ; ditto
 #+END_SRC
 
 ** Sending
@@ -935,8 +935,8 @@ Harry Schwartz sets ~projectile-global-mode~, in order to use Projectile everywh
 If we are using stack, then use FP Complete's intero haskell IDE mode.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package intero
-    :hook (haskell-mode . intero-mode))
+  ;; (use-package intero
+  ;;  :hook (haskell-mode . intero-mode))
 
   ;; (add-hook 'haskell-mode-hook #'intero-mode)
 #+END_SRC
