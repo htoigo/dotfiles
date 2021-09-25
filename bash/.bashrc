@@ -159,9 +159,15 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 ## nvm - Node.js version manager
 
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"                    # This loads nvm
-[[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [[ -n "$XDG_CONFIG_HOME" && -d "$XDG_CONFIG_HOME/nvm" ]]; then
+  export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+elif [[ -d "$HOME/.nvm" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+fi
+if [[ -n "$NVM_DIR" ]]; then
+  [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"                    # This loads nvm
+  [[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
 
 
 ## Haskell
