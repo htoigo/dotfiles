@@ -3,14 +3,13 @@
 # Add my personal zsh functions directory to fpath.
 fpath=(~/.zsh_fns $fpath)
 
-# For now, we need ~/.local/bin to be before /usr/local/bin because of how
-# =stack= works. ~/.local/bin is added to the PATH by
-# /etc/profile.d/home-local-bin.sh, which is sourced by /etc/profile, which is
-# sourced by /etc/zsh/zprofile. So, we don't need to add this directory here, at
-# this time. If we change our Zsh config so that /etc/profile is not sourced,
-# then we should uncomment this.
-#
-# PATH="$HOME/.local/bin:$PATH"
+# $HOME/.local/bin must be before /usr/local/bin because of how stack works.
+# We add it to the PATH conditionally, as on Manjaro at least,
+# /etc/profile.d/home-local-bin.sh (sourced by /etc/profile, which is sourced
+# by /etc/zsh/zprofile) does this already.
+if [[ -d "$HOME/.local/bin" && ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+  PATH="$HOME/.local/bin:$PATH"
+fi
 
 # Set our preferred editor.
 export EDITOR="emacsclient -c"
@@ -77,4 +76,10 @@ PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
 # bin directory to the PATH.
 if [[ -r "$HOME/.cargo/env" ]]; then
   . "$HOME/.cargo/env"
+fi
+
+# Acme.sh
+
+if [[ -d "$HOME/.acme.sh" ]]; then
+  export LE_WORKING_DIR="$HOME/.acme.sh"
 fi
