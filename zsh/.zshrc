@@ -44,12 +44,6 @@ setopt no_hup
 
 setopt correct
 
-
-# Disable XON/XOFF flow control.
-# We want to use C-s for history-incremental-search-forward.
-stty -ixon
-
-
 # Shell History
 
 HISTFILE=~/.zhistory
@@ -78,14 +72,38 @@ export HISTORY_IGNORE='(# *|ls *|ll *|la *|exit|[bf]g)'
 setopt hist_verify
 
 
-# Autoload other custom functions
-autoload -U dos2unix fndups fngrps glp mkcd mkqr sens srch unix2dos
+# Zsh Plugins
 
+# Use syntax highlighting
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Use history substring search
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# bind UP and DOWN arrow keys to history substring search
+zmodload zsh/terminfo
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 # Use autosuggestions, à la fish shell.
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+
+# pkgfile
+if [[ -r /usr/share/doc/pkgfile/command-not-found.zsh ]]; then
+  source /usr/share/doc/pkgfile/command-not-found.zsh
+  export PKGFILE_PROMPT_INSTALL_MISSING=1
+fi
+
+
+# Zsh personal functions directory
+
+# Ensure it exists and add it to the fpath.
+mkdir -p ~/.zsh_fns
+fpath=(~/.zsh_fns $fpath)
 
 
 # Theming
@@ -94,20 +112,10 @@ autoload -Uz compinit colors zcalc
 compinit -d
 colors
 
-
 # Prompt
-
 autoload -Uz promptinit
 promptinit
 prompt harry
-
-
-# less
-
-# Options to pass to less automatically.
-export LESS=iMR
-# Set up an input pipe for less
-export LESSOPEN="||lesspipe.zsh %s"
 
 
 # Color man pages
@@ -120,24 +128,104 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;36m'
 
 
-# Plugins
+# Autoload other custom functions
 
-# Use syntax highlighting
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# Use history substring search
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-# bind UP and DOWN arrow keys to history substring search
-zmodload zsh/terminfo
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+autoload -U dos2unix fndups fngrps glp mkcd mkqr sens srch unix2dos
 
-# pkgfile
-if [[ -r /usr/share/doc/pkgfile/command-not-found.zsh ]]; then
-    source /usr/share/doc/pkgfile/command-not-found.zsh
-    export PKGFILE_PROMPT_INSTALL_MISSING=1
+
+# Disable XON/XOFF flow control.
+# We want to use C-s for history-incremental-search-forward.
+stty -ixon
+
+
+# less
+
+# Options to pass to less automatically.
+export LESS=iMR
+# Set up an input pipe for less
+export LESSOPEN="||lesspipe.zsh %s"
+
+
+# GnuPG
+
+# It is important that GPG_TTY always reflects the output of the 'tty' command.
+export GPG_TTY="$(tty)"
+
+
+# The PATH
+
+# $HOME/.local/bin must be before /usr/local/bin because of how stack works.
+# We add it to the PATH conditionally, as on Manjaro at least,
+# /etc/profile.d/home-local-bin.sh (sourced by /etc/profile, which is sourced
+# by /etc/zsh/zprofile) does this already.
+if [[ -d "$HOME/.local/bin" && ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
 fi
+
+# Haskell
+
+# Add ~/.ghcup/bin and/or ~/.cabal/bin to the PATH, as needed. We add ghcup's
+# bin dir before cabal's so that ghcup's programs are preferred.
+# NB: There is a ~/.ghcup/env file but I didn't like how that did it.
+
+if [[ -d "$HOME/.ghcup/bin" && ":$PATH:" != *":$HOME/.ghcup/bin:"* ]]; then
+  export PATH="$PATH:$HOME/.ghcup/bin"
+fi
+if [[ -d "$HOME/.cabal/bin" && ":$PATH:" != *":$HOME/.cabal/bin:"* ]]; then
+  export PATH="$PATH:$HOME/.cabal/bin"
+fi
+
+
+# Nix package manager
+
+# Set up nix environment variables.
+if [ -e /home/harry/.nix-profile/etc/profile.d/nix.sh ]; then
+  . /home/harry/.nix-profile/etc/profile.d/nix.sh
+fi
+
+
+# Ruby and Ruby Gems
+
+# We want to install all Ruby Gems to our user installation directory,
+# ~/.gem/ruby/2.7.0/. So we set the environment variable GEM_HOME, which
+# specifies the location of the system installation directory, to point to our
+# user installation directory.
+if command -v ruby >/dev/null; then
+  export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
+  # Consequently, the commands provided by Gems end up in ~/.gem/ruby/2.7.0/bin,
+  # or such-like. Add this directory to the PATH, if it exists.
+  if [[ -d "$GEM_HOME" ]]; then
+    export PATH="$PATH:$GEM_HOME/bin"
+  fi
+fi
+
+
+# Rust
+
+# Setup environment vars for cargo. Right now (2021-05), this only adds cargo's
+# bin directory to the PATH.
+if [[ -r "$HOME/.cargo/env" ]]; then
+  . "$HOME/.cargo/env"
+fi
+
+
+# Acme.sh
+
+if [[ -d "$HOME/.acme.sh" ]]; then
+  export LE_WORKING_DIR="$HOME/.acme.sh"
+fi
+
+
+# Preferred editor.
+
+export EDITOR="emacsclient -c"
+
+
+# Python
+
+# We are using =pipenv= to manage Python virtual environments. Keep Python
+# virtual environments in the directories of their projects.
+export PIPENV_VENV_IN_PROJECT=1
 
 
 # nvm - Node.js version manager
@@ -161,5 +249,4 @@ fi
 
 
 # Show the user some system information when an interactive shell is started.
-
 print $USER@$HOST  $(uname -srm) $(lsb_release -rcs)
