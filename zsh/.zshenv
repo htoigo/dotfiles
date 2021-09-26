@@ -8,7 +8,7 @@ fpath=(~/.zsh_fns $fpath)
 # /etc/profile.d/home-local-bin.sh (sourced by /etc/profile, which is sourced
 # by /etc/zsh/zprofile) does this already.
 if [[ -d "$HOME/.local/bin" && ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-  PATH="$HOME/.local/bin:$PATH"
+  export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # Set our preferred editor.
