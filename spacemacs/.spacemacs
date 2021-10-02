@@ -45,7 +45,8 @@ This function should only modify configuration layer settings."
      (evil-snipe :variables
                  evil-snipe-enable-alternate-f-and-t-behaviors t)
      git
-     haskell
+     (haskell :variables
+              haskell-completion-backend 'lsp)
      helm
      (html :variables
            css-enable-lsp t
