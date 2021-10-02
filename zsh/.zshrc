@@ -164,15 +164,15 @@ fi
 
 # Haskell
 
-# Add ~/.ghcup/bin and/or ~/.cabal/bin to the PATH, as needed. We add ghcup's
-# bin dir before cabal's so that ghcup's programs are preferred.
+# Add ~/.ghcup/bin and/or ~/.cabal/bin to the PATH, as needed. We want ghcup's
+# bin dir to be before cabal's so that ghcup's programs are preferred.
 # NB: There is a ~/.ghcup/env file but I didn't like how that did it.
 
-if [[ -d "$HOME/.ghcup/bin" && ":$PATH:" != *":$HOME/.ghcup/bin:"* ]]; then
-  export PATH="$PATH:$HOME/.ghcup/bin"
-fi
 if [[ -d "$HOME/.cabal/bin" && ":$PATH:" != *":$HOME/.cabal/bin:"* ]]; then
-  export PATH="$PATH:$HOME/.cabal/bin"
+  export PATH="$HOME/.cabal/bin:$PATH"
+fi
+if [[ -d "$HOME/.ghcup/bin" && ":$PATH:" != *":$HOME/.ghcup/bin:"* ]]; then
+  export PATH="$HOME/.ghcup/bin:$PATH"
 fi
 
 
