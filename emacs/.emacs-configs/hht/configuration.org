@@ -930,6 +930,17 @@ Harry Schwartz sets ~projectile-global-mode~, in order to use Projectile everywh
           (define-key map (kbd "M-.") 'elpy-goto-definition))
  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+** Node/JavaScript
+
+ We use =nvm= to manage node and npm versions. The =nvm= Emacs package provides
+ a function ~nvm-use~ which allows us to call ~nvm use~ to adjust the exec-path
+ to use a certain node version.
+
+ #+begin_src emacs-lisp
+ (use-package nvm
+   :defer t)
+ #+end_src
+
 ** Haskell
 
 If we are using stack, then use FP Complete's intero haskell IDE mode.
