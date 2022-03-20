@@ -1,0 +1,36 @@
+# rasterizePdf() function --- rasterize the given PDF at the given resolution
+
+# args:
+#   $1:  the name of the pdf file to rasterize
+#   $2:  the resolution to render at, in dpi (defaults to 300)
+
+# Name the function parameters
+local infile="$1"
+local dpi=${2:-300}
+
+local tmpfile=$(mktemp --tmpdir rasterized.tmp.XXXXXXXXXX.pdf)
+local outfile="${infile%.pdf}-raster.pdf"
+
+# By default, magick uses antialiasing. Turn it off at resolutions >= 600 dpi
+# as its unnecessary at such a high dpi.
+if (( dpi >= 600 )); then
+  local antialiasing='+antialias'
+else
+  local antialiasing=
+fi
+
+# echo "Usage: rasterizePdf inputFile.pdf desiredDPI : this makes a raster version at desiredDPI dpi (default resolution is 300dpi) and optimizes it with Ghostscript. Output is stored in inputFile-raster.pdf."
+
+echo "Rasterizing the file '$infile':"
+echo "Creating $dpi dpi raster version in $tmpfile..."
+magick -render -density $dpi $antialiasing $infile $tmpfile
+
+echo "Optimizing the rasterized pdf file..."
+gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -sOutputFile="$outfile" $tmpfile
+echo "Optimization finished."
+
+echo "Cleaning up..."
+rm $tmpfile
+
+echo "Viewing the output file, '$outfile'."
+evince "$outfile" &

@@ -130,7 +130,7 @@ export LESS_TERMCAP_us=$'\E[01;36m'
 
 # Autoload other custom functions
 
-autoload -U dos2unix fndups fngrps glp mkcd mkqr sens srch unix2dos
+autoload -U dos2unix fndups fngrps glp mkcd mkqr rasterizePdf sens srch unix2dos
 
 
 # Disable XON/XOFF flow control.
