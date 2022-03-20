@@ -190,14 +190,14 @@ fi
 # ~/.gem/ruby/2.7.0/. So we set the environment variable GEM_HOME, which
 # specifies the location of the system installation directory, to point to our
 # user installation directory.
-if command -v ruby >/dev/null; then
-  export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
-  # Consequently, the commands provided by Gems end up in ~/.gem/ruby/2.7.0/bin,
-  # or such-like. Add this directory to the PATH, if it exists.
-  if [[ -d "$GEM_HOME" ]]; then
-    export PATH="$PATH:$GEM_HOME/bin"
-  fi
-fi
+# if command -v ruby >/dev/null; then
+#   export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
+#   # Consequently, the commands provided by Gems end up in ~/.gem/ruby/2.7.0/bin,
+#   # or such-like. Add this directory to the PATH, if it exists.
+#   if [[ -d "$GEM_HOME" ]]; then
+#     export PATH="$PATH:$GEM_HOME/bin"
+#   fi
+# fi
 
 
 # Rust
