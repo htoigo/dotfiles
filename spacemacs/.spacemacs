@@ -60,9 +60,16 @@ This function should only modify configuration layer settings."
                  js2-mode-show-parse-errors nil
                  javascript-fmt-tool 'prettier
                  javascript-fmt-on-save t
-                 js2-basic-offset 2
                  js-indent-level 2
+                 js2-basic-offset 2
                  node-add-modules-path t)
+     (json :variables
+           json-backend 'lsp
+           json-fmt-tool 'prettier
+           js-indent-level 2
+           js2-basic-offset 2)
+     (keyboard-layout :variables
+                      kl-layout 'colemak-neio-literal)
      lsp
      markdown
      multiple-cursors
