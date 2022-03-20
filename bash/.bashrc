@@ -225,3 +225,10 @@ PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
 if [[ -r "$HOME/.cargo/env" ]]; then
   . "$HOME/.cargo/env"
 fi
+
+
+## Exercism
+
+if [[ -r "$HOME/.config/exercism/exercism_completion.bash" ]]; then
+  . "$HOME/.config/exercism/exercism_completion.bash"
+fi
