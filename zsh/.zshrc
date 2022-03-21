@@ -241,6 +241,14 @@ if [[ -n "$NVM_DIR" ]]; then
 fi
 
 
+# CDDB server
+
+# Configure cddbp server env vars for cdda2wav
+if [[ -r "$HOME/.cddb.conf" ]]; then
+  . "$HOME/.cddb.conf"
+fi
+
+
 # Aliases
 
 if [[ -r ~/.zsh_alias ]]; then
