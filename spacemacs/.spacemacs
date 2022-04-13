@@ -650,7 +650,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(evil-escape-delay 0.05)
- '(evil-escape-key-sequence "fp")
+ '(evil-escape-key-sequence "wf")
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol nil)
  '(lsp-disabled-clients '(lsp-pyls lsp-python-ms))
