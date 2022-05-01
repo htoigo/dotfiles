@@ -142,6 +142,7 @@ stty -ixon
 
 # Options to pass to less automatically.
 export LESS=iMR
+
 # Set up an input pipe for less
 export LESSOPEN="||lesspipe.zsh %s"
 
@@ -150,6 +151,11 @@ export LESSOPEN="||lesspipe.zsh %s"
 
 # It is important that GPG_TTY always reflects the output of the 'tty' command.
 export GPG_TTY="$(tty)"
+
+
+# Preferred editor.
+
+export EDITOR="emacsclient -c"
 
 
 # The PATH
@@ -175,58 +181,36 @@ if [[ -d "$HOME/.ghcup/bin" && ":$PATH:" != *":$HOME/.ghcup/bin:"* ]]; then
   export PATH="$HOME/.ghcup/bin:$PATH"
 fi
 
-
-# Nix package manager
-
-# Set up nix environment variables.
-if [ -e /home/harry/.nix-profile/etc/profile.d/nix.sh ]; then
-  . /home/harry/.nix-profile/etc/profile.d/nix.sh
-fi
-
-
 # Ruby and Ruby Gems
 
-# We want to install all Ruby Gems to our user installation directory,
-# ~/.gem/ruby/2.7.0/. So we set the environment variable GEM_HOME, which
-# specifies the location of the system installation directory, to point to our
-# user installation directory.
-# if command -v ruby >/dev/null; then
-#   export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
-#   # Consequently, the commands provided by Gems end up in ~/.gem/ruby/2.7.0/bin,
-#   # or such-like. Add this directory to the PATH, if it exists.
-#   if [[ -d "$GEM_HOME" ]]; then
-#     export PATH="$PATH:$GEM_HOME/bin"
-#   fi
-# fi
+# Rubygems has a system installation directory and a user installation directory.
+# The environment variable GEM_HOME specifies the location of the system
+# installation directory. The user installation directory is usually under
+# ~/.gem or $XDG_DATA_HOME/gem (by default ~/.local/share/gem), and this location
+# can be found in the Ruby variable Gem.user_dir.
 
+# We want to install all Ruby Gems into our user installation directory, so we
+# set GEM_HOME to that.
+
+if command -v ruby >/dev/null; then
+  GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
+  export GEM_HOME
+
+  if [[ -d "$GEM_HOME/bin" && ":${PATH}:" != *":$GEM_HOME/bin:"* ]]; then
+    PATH="$GEM_HOME/bin:$PATH"
+    export PATH
+  fi
+fi
 
 # Rust
 
-# Setup environment vars for cargo. Right now (2021-05), this only adds cargo's
-# bin directory to the PATH.
-if [[ -r "$HOME/.cargo/env" ]]; then
-  . "$HOME/.cargo/env"
+# The settings here should match the results of sourcing $HOME/.cargo/env.
+
+if [[ -d "$HOME/.cargo/bin" && ":${PATH}:" != *":$HOME/.cargo/bin:"* ]]; then
+  # Prepend to PATH in case a system-installed rustc needs to be overridden.
+  PATH="$HOME/.cargo/bin:$PATH"
+  export PATH
 fi
-
-
-# Acme.sh
-
-if [[ -d "$HOME/.acme.sh" ]]; then
-  export LE_WORKING_DIR="$HOME/.acme.sh"
-fi
-
-
-# Preferred editor.
-
-export EDITOR="emacsclient -c"
-
-
-# Python
-
-# We are using =pipenv= to manage Python virtual environments. Keep Python
-# virtual environments in the directories of their projects.
-export PIPENV_VENV_IN_PROJECT=1
-
 
 # nvm - Node.js version manager
 
@@ -238,6 +222,30 @@ fi
 if [[ -n "$NVM_DIR" ]]; then
   [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"                    # This loads nvm
   [[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
+
+# Python
+
+# We are using =pipenv= to manage Python virtual environments. Keep Python
+# virtual environments in the directories of their projects.
+export PIPENV_VENV_IN_PROJECT=1
+
+
+# Acme.sh
+#
+# As of 4/30/22, I think I am using certbot over acme.sh. Commenting this out
+# for now. May remove it later.
+
+# if [[ -d "$HOME/.acme.sh" ]]; then
+#   export LE_WORKING_DIR="$HOME/.acme.sh"
+# fi
+
+
+# Nix package manager
+
+# Set up nix environment variables.
+if [ -e /home/harry/.nix-profile/etc/profile.d/nix.sh ]; then
+  . /home/harry/.nix-profile/etc/profile.d/nix.sh
 fi
 
 
