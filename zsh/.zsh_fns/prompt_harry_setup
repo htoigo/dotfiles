@@ -1,0 +1,320 @@
+# 'harry' prompt theme for Zsh.
+
+# Place this file in a directory that is in included in your fpath array.
+
+prompt_harry_help() {
+  cat <<EOF
+In this prompt theme, many colors and some symbols can be customized. To change
+settings, pass it some arguments when loading, like so:
+
+  prompt harry [key=value]...
+
+where each key=value pair specifies a color or a symbol setting to change.
+
+The color settings that can be changed are (use these codes for key, above):
+
+  pwd - present working directory
+  success - usual color of the prompt character
+  error - color of prompt character if prior command returned an error
+  root - color of prompt character for root
+  exit_code - color of the exit code (displayed when nonzero)
+  git_branch - main color for git info
+  git_ahead, git_behind - color of symbol indicating you are ahead or behind so many commits
+  git_merging - color of symbol indicating a merge conflict
+  git_untracked, git_modified, git_staged - color of circle when there are
+               untracked, modified, or staged changes respectively
+  ps2 - color of secondary prompt, PS2
+
+and value may be one of the named terminal colors (red, yellow, green,
+blue, cyan, or white) or it may be an RGB triple in hexadecimal form, such
+as #2347e3.
+
+To change one of the symbols, key may be one of:
+
+  sym_normal, sym_root, or sym_ps2
+
+and the symbol value can be any character string you want. Note, however, that
+since '%' has special meaning in prompt strings, to specify a '%' you must write
+'%%'.
+
+Examples:
+
+  prompt harry pwd=yellow error=magenta success='#bdfd14'  \
+    git_ahead=red git_behind=cyan \
+    sym_normal='%%' sym_root='#'
+
+The default colors are ...  Does this theme work best with a dark background?
+
+It is recommended to use a patched font with this theme. You want a font that
+includes glyphs for the special characters it uses:
+
+  ➜   (unicode 279c)
+  ■    (unicode 25a0)
+  …    (unicode 2505)
+  ⚡    (unicode xxxx)
+  ●    (unicode 25cf)
+
+Fira-code is a good choice.
+EOF
+}
+
+prompt_harry_preview() {
+  # The passing on of args here assumes that the prompt_harry_setup
+  # function will do something with them, to customize the theme.
+
+  if (( ! $#* )); then
+    # They didn't pass in any args; show a few of our favorite
+    # variations:
+    prompt_preview_theme harry
+    print
+    # FIXME:
+    prompt_preview_theme harry pwd=yellow git_branch='#994203'
+  else
+    # They passed in some args, so show them what they want to see.
+    prompt_preview_theme harry "$@"
+  fi
+}
+
+prompt_harry_preexec() {
+  # Set terminal title to the command about to be run, so it will show the
+  # running command.
+  print -Pn "\e]0;$1\a"
+}
+
+prompt_harry_precmd() {
+  # Just before showing the prompt again, reset terminal title to what we want
+  # it to show in between commands:  username@host  tty line
+  print -Pn "\e]0;%n@%m  %y\a"
+}
+
+prompt_harry_char() {
+  # Capture exit status of last command before it's overwritten by
+  # another command.
+  local last_exit_code=$?
+
+  local clr_success=${1:-cyan}
+  local clr_error=${2:-red}
+  local clr_root=${3:-red}
+  local prompt_char_normal=${4:-'➜'}
+  local prompt_char_root=${5:-'■'}
+
+  local clr char
+
+  if [[ $UID -eq 0 ]]; then
+    char="$prompt_char_root"
+    clr="$clr_root"
+  else
+    char="$prompt_char_normal"
+    if [[ $last_exit_code -ne 0 ]]; then
+      clr="$clr_error"
+    else
+      clr="$clr_success"
+    fi
+  fi
+
+  print -n "%{%F{$clr}%}$char%{%f%}"
+}
+
+prompt_harry_git_branch() {
+  # Show Git branch/tag, or name-rev if on detached head.
+    2>/dev/null {
+      git symbolic-ref -q HEAD ||
+        git name-rev --name-only --no-undefined --always HEAD
+    } | sed -E 's;^.*/;;'
+}
+
+prompt_harry_git_status() {
+  # Show status of a git repo in compact form, using colored symbols.
+
+  local branch_clr=$1    # default is specified in prompt_harry_git_info()
+  local ahead_clr=${2:-red}
+  local behind_clr=${3:-cyan}
+  local merging_clr=${4:-magenta}
+  local untracked_clr=${5:-red}
+  local modified_clr=${6:-yellow}
+  local staged_clr=${7:-green}
+
+  local gstat=''
+  local num_ahead="$(git log --oneline @{u}.. 2>/dev/null | wc -l | tr -d ' ')"
+  if [[ "$num_ahead" -gt 0 ]]; then
+    gstat="${gstat}%{%F{$ahead_clr}%}A$num_ahead"
+  fi
+  local num_behind="$(git log --oneline ..@{u} 2>/dev/null | wc -l | tr -d ' ')"
+  if [[ "$num_behind" -gt 0 ]]; then
+    gstat="${gstat}%{%F{$behind_clr}%}B$num_behind"
+  fi
+  local git_dir="$(git rev-parse --git-dir 2>/dev/null)"
+  if [[ -n "$git_dir" && -r "$git_dir/MERGE_HEAD" ]]; then
+    gstat="${gstat}%{%B%F{$merging_clr}%}⚡︎%{%b%}"
+    # ⚡ is unicode 26a1
+  fi
+  if [[ -n "$(git ls-files --other --exclude-standard 2>/dev/null)" ]]; then
+    gstat="${gstat}%{%B%F{$untracked_clr}%}●%{%b%}"
+    # ● is unicode 25cf
+  fi
+  if ! git diff --quiet 2>/dev/null; then
+    gstat="${gstat}%{%B%F{$modified_clr}%}●%{%b%}"
+  fi
+  if ! git diff --cached --quiet 2>/dev/null; then
+    gstat="${gstat}%{%B%F{$staged_clr}%}●%{%b%}"
+  fi
+
+  # Send our 'return value' on stdout:
+  if [[ -n $gstat ]]; then
+    # Foreground color has been set to branch_clr by prompt_harry_git_info()
+    # so the initial '[' here has the right color.
+    print -n "[$gstat%{%F{$branch_clr}%}]"
+  fi
+}
+
+prompt_harry_git_info() {
+  # Show git branch & status if in a git repo.
+  local branch_clr=${1:-cyan}
+  # Defaults for the below colors are specified in prompt_harry_git_status()
+  local ahead_clr=$2
+  local behind_clr=$3
+  local merging_clr=$4
+  local untracked_clr=$5
+  local modified_clr=$6
+  local staged_clr=$7
+
+  local git_branch="$(prompt_harry_git_branch)"
+
+  if [[ -n "$git_branch" ]]; then
+    print -n "%{%F{$branch_clr}%} ${git_branch}$(prompt_harry_git_status $branch_clr $ahead_clr $behind_clr $merging_clr $untracked_clr $modified_clr $staged_clr)"
+  fi
+}
+
+prompt_harry_exit_code() {
+  # Print exit code of last command if nonzero (error).
+
+  local last_exit_code=$1
+  local exit_code_clr=${2:-red}
+
+  if [[ $last_exit_code -ne 0 ]]; then
+    print -n " %{%F{$exit_code_clr}%}[$last_exit_code]%{$reset_color%}"
+  fi
+}
+
+prompt_harry_rps1() {
+  # This function exists because we need to capture the last command's exit
+  # status and hold onto it until prompt_harry_exit_code() uses it, at the end
+  # of the RPS1 string. Since prompt_harry_git_info() is invoked BEFORE
+  # prompt_harry_exit_code(), the exit status of the last command before the
+  # prompt will be clobbered by the git commands run by prompt_harry_git_info().
+  # Due to the shell's dynamic scoping, we need a function to be running from
+  # the time we capture the last command's exit code until we call
+  # prompt_harry_exit_code().
+  local last_exit_code=$?
+
+  local git_branch_clr=$1
+  local git_ahead_clr=$2
+  local git_behind_clr=$3
+  local git_merging_clr=$4
+  local git_untracked_clr=$5
+  local git_modified_clr=$6
+  local git_staged_clr=$7
+  local exit_code_clr=$8
+
+  print -n "$(prompt_harry_git_info $git_branch_clr $git_ahead_clr $git_behind_clr $git_merging_clr $git_untracked_clr $git_modified_clr $git_staged_clr)$(prompt_harry_exit_code $last_exit_code $exit_code_clr)"
+}
+
+prompt_harry_parse_args() {
+  # All args to prompt_harry_setup() are passed on to this function for
+  # processing. We parse them and do error checking here, and then use them to
+  # modify the clrs and syms associative arrays that hold the colors and symbols
+  # used by this prompt theme. The clrs and syms arrays are defined in
+  # prompt_harry_setup(). Since this function is called from that function, when
+  # me modify clrs and syms, we modify the arrays defined THERE (dynamic
+  # scoping).
+
+  # The first argument passed must be the name of a variable that will accept
+  # the return value of this function. The rest of the arguments should be the
+  # arguments passed to prompt_harry_setup(). A return value of 'error'
+  # indicates some error was encountered and we should abort loading this prompt
+  # theme. Any other return value means that everything went fine.
+
+  local __resultvar=$1; shift
+  local arg
+  for arg do
+    if [[ ! "$arg" =~ ^[^=]+=[^=]+$ ]]; then
+      # It's an error if an arg does not contain exactly one '='.
+      >&2 print "error: invalid argument format; args must be of form key=val"
+      eval $__resultvar=error
+      return
+    fi
+    local key=${arg%%=*}
+    local val=${arg#*=}
+    if [[ "$key" = sym_* ]]; then
+      # Overriding a symbol:  sym_normal='>'
+      local symName=${key#sym_}
+      if [[ ! " ${(k)syms} " =~ " $symName " ]]; then
+        # symName is not a valid symbol key in the syms array.
+        >&2 print "error: $symName is not a valid symbol setting"
+        eval $__resultvar=error
+        return
+      fi
+      syms[$symName]="$val"
+    else
+      # Overriding a color:  success=cyan
+      if [[ ! " ${(k)clrs} " =~ " $key " ]]; then
+        # They didn't specify a valid color key in the clrs array.
+        >&2 print "error: $key is not a valid color setting"
+        eval $__resultvar=error
+        return
+      fi
+      clrs[$key]="$val"
+    fi
+  done
+  eval $__resultvar=okay
+}
+
+#
+# Main initialization function.
+#
+
+prompt_harry_setup() {
+  # This is called when we load this prompt theme by invoking 'prompt harry'.
+
+  # Default colors and symbols
+  typeset -A clrs syms
+  local clrs=([pwd]=cyan [success]=cyan [error]=red [root]=red [exit_code]=red [git_branch]=cyan [git_ahead]=red [git_behind]=cyan [git_merging]=magenta [git_untracked]=red [git_modified]=yellow [git_staged]=green [ps2]=yellow)
+  # ➜ is unicode 279c, ■ is unicode 25a0, … is unicode 2505
+  local syms=([normal]=➜ [root]=■ [ps2]=…)
+
+  # Parse positional params which can override default colors or symbols in
+  # the clrs and syms arrays. The args are specified like so:
+  #   git_branch=blue pwd='#f7ce5e' sym_normal='>' sym_root='#'
+  prompt_harry_parse_args result "$@"
+
+  if [[ $result = error ]]; then
+    # Some argument was invalid. We should have printed an error message
+    # already, so just return a nonzero status.
+    return 1
+  fi
+
+  # Add our preexec and precmd hooks.
+  add-zsh-hook preexec prompt_harry_preexec
+  add-zsh-hook precmd prompt_harry_precmd
+
+  # In the prompt strings PS1, etc. we need to quote color values, because with
+  # the extendedglob option set, the '#' (as in '#f7ce5e') triggers filename
+  # generation/globbing. This doesn't seem to be a problem when passing color
+  # values as args to functions, above.
+
+  PS1="%{%F{$clrs[pwd]}%}%(4~|%-1~/.../%2~|%~) \$(prompt_harry_char '$clrs[success]' '$clrs[error]' '$clrs[root]' '$syms[normal]' '$syms[root]') "
+  RPS1="\$(prompt_harry_rps1 '$clrs[git_branch]' '$clrs[git_ahead]' '$clrs[git_behind]' '$clrs[git_merging]' '$clrs[git_untracked]' '$clrs[git_modified]' '$clrs[git_staged]' '$clrs[exit_code]')"
+  # %_ prints what shell constructs have been started.
+  PS2="%{%F{$clrs[ps2]}%}%_%{%B%}$syms[ps2]%{$reset_color%}"
+  # %^ prints shell constructs that have been started, in reverse.
+  RPS2="%{%F{$clrs[ps2]}%}%^%{$reset_color%}"
+  # PS3 is the selection prompt in a 'select' loop. Defaults to '?#'.
+  PS3="Select a number:"
+  # PS4 is the execution trace prompt. Default is commented below.
+  # PS4="+%N:%i>"
+
+  # Zsh options we need:
+  prompt_opts=(cr sp percent subst)
+}
+
+[[ -o kshautoload ]] || prompt_harry_setup "$@"
