@@ -53,6 +53,7 @@ df_install()
     local installCmd
 
     case $df_osName in
+      linux-arch)    installCmd='sudo pacman -S --needed' ;;
       linux-manjaro) installCmd='pamac install --no-confirm' ;;
       linux-*suse*)  installCmd='sudo zypper install' ;;
       *) echo "No install command defined for OS: $df_osName"
