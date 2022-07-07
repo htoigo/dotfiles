@@ -172,13 +172,15 @@ fi
 
 ## Haskell
 
-# We installed Haskell Platform via =ghcup=, so adjust the PATH to include the
-# directories where =ghcup= puts the =ghc= and =cabal= binaries. We do this
-# manually rather than sourcing ~/.ghcup/env as that file adds these directories
-# to the beginning of PATH, and we want them added to the end for better
-# security.
-if [[ -d "$HOME/.cabal/bin" && -d "$HOME/.ghcup/bin" ]]; then
-  PATH="$PATH:$HOME/.cabal/bin:$HOME/.ghcup/bin"
+# Ensure ~/.ghcup/bin and ~/.cabal/bin are in the PATH. We want ghcup's bin dir
+# to be before cabal's so that ghcup's programs are preferred. NB: GHCup sources
+# a ~/.ghcup/env file to do this, but that puts .cabal/bin before .ghcup/bin.
+
+if [[ -d "$HOME/.cabal/bin" && ":$PATH:" != *":$HOME/.cabal/bin:"* ]]; then
+  export PATH="$HOME/.cabal/bin:$PATH"
+fi
+if [[ -d "$HOME/.ghcup/bin" && ":$PATH:" != *":$HOME/.ghcup/bin:"* ]]; then
+  export PATH="$HOME/.ghcup/bin:$PATH"
 fi
 
 ## Enable Haskell Stack auto-completion
