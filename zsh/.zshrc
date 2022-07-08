@@ -193,12 +193,10 @@ fi
 # set GEM_HOME to that.
 
 if command -v ruby >/dev/null; then
-  GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
-  export GEM_HOME
+  export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
 
   if [[ -d "$GEM_HOME/bin" && ":${PATH}:" != *":$GEM_HOME/bin:"* ]]; then
-    PATH="$PATH:$GEM_HOME/bin"
-    export PATH
+    export PATH="$PATH:$GEM_HOME/bin"
   fi
 fi
 
