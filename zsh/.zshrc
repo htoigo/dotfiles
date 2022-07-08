@@ -204,12 +204,10 @@ fi
 
 # Rust
 
-# The settings here should match the results of sourcing $HOME/.cargo/env.
-
-if [[ -d "$HOME/.cargo/bin" && ":${PATH}:" != *":$HOME/.cargo/bin:"* ]]; then
-  # Prepend to PATH in case a system-installed rustc needs to be overridden.
-  PATH="$HOME/.cargo/bin:$PATH"
-  export PATH
+# Setup environment vars for cargo. One thing this does is add Cargo's bin
+# directory to the $PATH.
+if [[ -r "$HOME/.cargo/env" ]]; then
+  . "$HOME/.cargo/env"
 fi
 
 # nvm - Node.js version manager

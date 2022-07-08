@@ -222,8 +222,8 @@ PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
 
 ## Rust
 
-# Setup environment vars for cargo. Right now (2021-05), this only adds cargo's
-# bin directory to the PATH.
+# Setup environment vars for cargo. One thing this does is add Cargo's bin
+# directory to the $PATH.
 if [[ -r "$HOME/.cargo/env" ]]; then
   . "$HOME/.cargo/env"
 fi
