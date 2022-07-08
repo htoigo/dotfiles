@@ -197,7 +197,7 @@ if command -v ruby >/dev/null; then
   export GEM_HOME
 
   if [[ -d "$GEM_HOME/bin" && ":${PATH}:" != *":$GEM_HOME/bin:"* ]]; then
-    PATH="$GEM_HOME/bin:$PATH"
+    PATH="$PATH:$GEM_HOME/bin"
     export PATH
   fi
 fi
