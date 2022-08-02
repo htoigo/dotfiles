@@ -21,3 +21,21 @@ if [ -z "$XAUTHORITY" ] && [ -n "$systemdXauthority" ]; then
 fi
 
 unset systemdXauthority
+
+# Ensure the ssh-agent environment variables are set.
+#
+# Note: we don't want to overwrite an existing value of SSH_AUTH_SOCK set by a
+# forwarded ssh agent.
+#
+# Pull the variables in from systemd user environment. We only need this when
+# logging in on a tty; gdm-wayland-session automatically propagates systemd user
+# environment into the wayland session.
+
+if [[ ! -v SSH_AUTH_SOCK ]]; then
+  eval $(systemctl --user show-environment | grep SSH_AUTH_SOCK)
+  export SSH_AUTH_SOCK
+fi
+if [[ ! -v SSH_AGENT_PID ]]; then
+  eval $(systemctl --user show-environment | grep SSH_AGENT_PID)
+  export SSH_AGENT_PID
+fi
