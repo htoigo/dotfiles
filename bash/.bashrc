@@ -209,15 +209,22 @@ export PIPENV_VENV_IN_PROJECT=1
 
 ## Ruby & Ruby Gems
 
-# We want to install all Ruby Gems to our user installation directory,
-# ~/.gem/ruby/2.7.0/. So we set the environment variable GEM_HOME, which
-# specifies the location of the system installation directory, to point to our
-# user installation directory.
-export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
+# Rubygems has a system installation directory and a user installation directory.
+# The environment variable GEM_HOME specifies the location of the system
+# installation directory. The user installation directory is usually under
+# ~/.gem or $XDG_DATA_HOME/gem (by default ~/.local/share/gem), and this location
+# can be found in the Ruby variable Gem.user_dir.
 
-# Consequently, the commands provided by Gems end up in ~/.gem/ruby/2.7.0/bin.
-# Add this directory to the PATH.
-PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
+# We want to install all Ruby Gems into our user installation directory, so we
+# set GEM_HOME to that.
+
+if command -v ruby >/dev/null; then
+  export GEM_HOME="$(ruby -r rubygems -e 'puts Gem.user_dir')"
+
+  if [[ -d "$GEM_HOME/bin" && ":${PATH}:" != *":$GEM_HOME/bin:"* ]]; then
+    export PATH="$PATH:$GEM_HOME/bin"
+  fi
+fi
 
 
 ## Rust
