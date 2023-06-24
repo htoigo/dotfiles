@@ -174,11 +174,11 @@ fi
 # to be before cabal's so that ghcup's programs are preferred. NB: GHCup sources
 # a ~/.ghcup/env file to do this, but that puts .cabal/bin before .ghcup/bin.
 
-if [[ -d "$HOME/.cabal/bin" && ":$PATH:" != *":$HOME/.cabal/bin:"* ]]; then
-  export PATH="$HOME/.cabal/bin:$PATH"
-fi
 if [[ -d "$HOME/.ghcup/bin" && ":$PATH:" != *":$HOME/.ghcup/bin:"* ]]; then
-  export PATH="$HOME/.ghcup/bin:$PATH"
+  export PATH="$PATH:$HOME/.ghcup/bin"
+fi
+if [[ -d "$HOME/.cabal/bin" && ":$PATH:" != *":$HOME/.cabal/bin:"* ]]; then
+  export PATH="$PATH:$HOME/.cabal/bin"
 fi
 
 # Ruby and Ruby Gems
