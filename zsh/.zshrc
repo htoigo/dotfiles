@@ -99,11 +99,15 @@ if [[ -r /usr/share/doc/pkgfile/command-not-found.zsh ]]; then
 fi
 
 
-# Zsh personal functions directory
+# Zsh function path
 
-# Ensure it exists and add it to the fpath.
-mkdir -p ~/.zsh_fns
-fpath=(~/.zsh_fns $fpath)
+# User-specific zsh auto-completion
+mkdir -p "$HOME/.config/zsh/completion"
+fpath=("$HOME/.config/zsh/completion" $fpath)
+
+# User-specific zsh functions directory
+mkdir -p "$HOME/.config/zsh/functions"
+fpath=("$HOME/.config/zsh/functions" $fpath)
 
 
 # Theming

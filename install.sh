@@ -86,9 +86,11 @@ stow vim
 
 # Zsh
 #
-# Create the zsh functions directory so that it does not become a link to the
-# dotfiles repo. We just want the individual zsh function files to be links.
-mkdir -p ~/.zsh_fns
+# Create the zsh functions and completion directories so that they do not become
+# links into the dotfiles repo. We just want the individual zsh function files
+# or completion files within them to be links.
+mkdir -p ~/.config/zsh/functions
+mkdir -p ~/.config/zsh/completion
 stow zsh
 
 # Emacs, Spacemacs, etc.
