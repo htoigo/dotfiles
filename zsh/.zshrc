@@ -231,16 +231,6 @@ command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 
-# Acme.sh
-#
-# As of 4/30/22, I think I am using certbot over acme.sh. Commenting this out
-# for now. May remove it later.
-
-# if [[ -d "$HOME/.acme.sh" ]]; then
-#   export LE_WORKING_DIR="$HOME/.acme.sh"
-# fi
-
-
 # Nix package manager
 
 # Set up nix environment variables.
