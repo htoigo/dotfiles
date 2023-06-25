@@ -184,8 +184,8 @@ if [[ -d "$HOME/.ghcup/bin" && ":$PATH:" != *":$HOME/.ghcup/bin:"* ]]; then
 fi
 
 ## Enable Haskell Stack auto-completion
-if command -v stack >/dev/null; then
-  eval "$(stack --bash-completion-script stack)"
+if command -v stack >/dev/null && [[ -f "$HOME/.config/bash_completion.d/stack" ]]; then
+  . "$HOME/.config/bash_completion.d/stack"
 fi
 
 
