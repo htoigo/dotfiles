@@ -120,7 +120,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(nvm)
+   dotspacemacs-additional-packages '(all-the-icons nvm)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -629,6 +629,9 @@ before packages are loaded."
 
   (use-package nvm
     :defer t)
+
+  (use-package all-the-icons
+    :if (display-graphic-p))
 
   (setq
    make-backup-files t
