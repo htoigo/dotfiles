@@ -202,9 +202,15 @@ export MATLAB_USE_USERWORK=1
 
 ## Python
 
-# We are using =pipenv= to manage Python virtual environments. Keep Python
-# virtual environments in the directories of their projects.
-export PIPENV_VENV_IN_PROJECT=1
+# We are using pyenv to manage Python versions and virtual environments. Keep
+# Python virtual environments in the directories of their projects.
+
+# Pyenv
+
+if command -v pyenv >/dev/null; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  eval "$(pyenv init -)"
+fi
 
 
 ## Ruby & Ruby Gems
