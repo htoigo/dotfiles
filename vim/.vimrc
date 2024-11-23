@@ -97,6 +97,11 @@ if !exists(":DiffOrig")
 endif
 
 " HHT
+
+" Use a better color scheme
+colorscheme desert
+set bg=dark            " look better on a dark background
+
 " Set up tabs, leaving tabstop at the default 8, since changing this can
 " cause problems displaying a file in certain situations, e.g. printing.
 "set tabstop=4
@@ -104,4 +109,4 @@ set softtabstop=4      " feels like tabs are 4 spaces
 set shiftwidth=4       " for auto-indent
 set expandtab          " always insert spaces for tabs
 set textwidth=78
-set bg=dark            " look better on a dark background
+
