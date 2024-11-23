@@ -84,7 +84,6 @@ This function should only modify configuration layer settings."
              python-test-runner 'pytest
              python-formatter 'yapf
              python-format-on-save nil
-             python-pipenv-activate t
              python-fill-column 85)
      (react :variables
             web-mode-markup-indent-offset 2
