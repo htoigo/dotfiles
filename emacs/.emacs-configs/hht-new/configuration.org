@@ -36,17 +36,8 @@ also want to look at the variable ido-use-virtual-buffers.
 #+end_src
 
 Turn off the menu bar, toolbar and scroll bars to gain valuable screen space.
-Now entering the zen realm of nothing-but-the-text...
-
-#+begin_src emacs-lisp
-  (menu-bar-mode -1)
-  (when (fboundp 'tool-bar-mode)
-    (tool-bar-mode -1))
-  (when (fboundp 'scroll-bar-mode)
-    (scroll-bar-mode -1))
-  (when (fboundp 'horizontal-scroll-bar-mode)
-    (horizontal-scroll-bar-mode -1))
-#+end_src
+Now entering the zen realm of nothing-but-the-text... These settings have been
+moved to the UI Preferences theme section below.
 
 The =uniquify= library makes it so that when you visit two files with the same
 name in different directories, the buffer names have the directory name
@@ -519,7 +510,6 @@ Try out packages before permanently installing them.
 #+end_src
 
 * UI Preferences
-
 ** Column number
 
  Show the column number along with the row in the modeline.
@@ -542,10 +532,10 @@ Try out packages before permanently installing them.
  (global-prettify-symbols-mode t)
  #+end_src
 
-** Load up a Theme
+** Theme and other appearance settings
 
 We store custom theme files in a =themes= subdirectory under
-~user-emacs-directory~ to reduce clutter in ~user-emacs-directory~.
+=user-emacs-directory= to reduce clutter in =user-emacs-directory=.
 
 #+begin_src emacs-lisp
   (setq custom-theme-directory "~/.emacs.d/themes")
@@ -554,6 +544,58 @@ We store custom theme files in a =themes= subdirectory under
 We have installed the =spacemacs-theme= package and are trying that. It doesn't
 seem to need a use-package declaration. We used the Custom Themes menu command
 to set it.
+
+We also want to hide the menu bar, tool bar, and scrollbars. We do this in the
+special function =hht/apply-look-and-feel= because of the problem mentioned
+below.
+
+The following allows us to adjust the transparency of frames. Transparency
+seems to work better with dark themes.
+
+#+begin_src emacs-lisp
+  (defun set-frame-transparency (value)
+    "Sets the transparency of the frame. 0 is transparent, 100 is opaque."
+    (interactive "nTransparency Value 0 - 100 opaque:")
+    (set-frame-parameter (selected-frame) 'alpha value))
+#+end_src
+
+*Problem:* When emacs is started as a server via =systemctl --user=, some frame
+appearance settings don't take effect--e.g. it still shows a vertical scrollbar
+even though we disabled it. This doesn't happen when =emacs= is run from the
+terminal.
+
+To work around this, we put these settings in a function which we add to the
+hooks that are called after window frames are setup.
+
+#+begin_src emacs-lisp
+  (defun hht/apply-look-and-feel ()
+    "Apply look-and-feel settings to the current frame."
+    (interactive)
+    ; (load-theme 'solarized-light t)
+    (set-frame-transparency 90)
+    (menu-bar-mode -1)
+    (when (fboundp 'tool-bar-mode)
+      (tool-bar-mode -1))
+    (when (fboundp 'scroll-bar-mode)
+      (scroll-bar-mode -1))
+    (when (fboundp 'horizontal-scroll-bar-mode)
+      (horizontal-scroll-bar-mode -1)))
+#+end_src
+
+If this code is being evaluated by =emacs --daemon=, ensure that all frames are
+themed and scrollbars etc. are set appropriatedly.
+
+#+begin_src emacs-lisp
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+        (lambda (frame)
+           (with-selected-frame frame (hht/apply-look-and-feel))))
+    (hht/apply-look-and-feel))
+
+  ; Do we also need to add our function to the window-setup-hook?
+  ; It was in one guy's code.
+  ; (add-hook 'window-setup-hook #'my-look-and-feel)
+#+end_src
 
 
 We *were* using Bozhidar Batsov's solarized color theme, installed via its MELPA
@@ -569,33 +611,6 @@ there are solarized light and dark themes in the custom themes menu.
 ;    (x-underline-at-descent-line t)
 ;    :config
 ;    (add-to-list 'custom-enabled-themes 'solarized-light))
-#+end_src
-
-The following allows us to adjust the transparency of frames. Transparency
-seems better with dark themes.
-
-#+begin_src emacs-lisp
-  (defun set-frame-transparency (value)
-    "Sets the transparency of the frame. 0 is transparent, 100 is opaque."
-    (interactive "nTransparency Value 0 - 100 opaque:")
-    (set-frame-parameter (selected-frame) 'alpha value))
-
-  (defun hht/apply-theme ()
-    "Apply the solarized theme and make frames just slightly transparent."
-    (interactive)
-    (load-theme 'solarized-light t)
-    (set-frame-transparency 90))
-#+end_src
-
-If this code is being evaluated by ~emacs --daemon~, ensure that each
-subsequent frame is themed appropriatedly.
-
-#+begin_src emacs-lisp
-;  (if (daemonp)
-;      (add-hook 'after-make-frame-functions
-;                (lambda (frame)
-;                  (with-selected-frame frame (hht/apply-theme))))
-;    (hht/apply-theme))
 #+end_src
 
 ** Tweak Window Chrome
