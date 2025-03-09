@@ -611,24 +611,49 @@ subsequent frame is themed appropriatedly.
 * Helpful Feedback
 ** Use =which-key=
 
- =which-key= displays the possible completions for a long keybinding. That is
- really helpful in some modes (like =projectile=, for instance).
+ =which-key= automatically displays the possible completions for a prefix key
+ after a short delay. This is really useful in some modes and for some prefix
+ keys with lots of following keys.
 
  #+begin_src emacs-lisp
-  (use-package which-key
-    :diminish
-    :config (which-key-mode))
+ (use-package which-key
+   :diminish
+   :config (which-key-mode))
  #+end_src
 
- Fix paging through completion keys for <f1>.
+ But there is a problem with paging for certain prefix keys.
 
- Since <f1> C-h is bound by default to =help-for-help=, in order to allow C-h
- to be used for paging through the completions, we must explicitly override the
- binding with:
+ =which-key= normally uses =C-h= as its paging key, to page through following
+ keys if there are too many to display at once. However, if the sequence of the
+ prefix key followed by =C-h= is bound to something, then one will be unable to
+ page through =which-key='s keys because you trigger the command.
+
+ The =which-key= [[https://github.com/justbur/emacs-which-key#paging-options][README]] does specify two methods for fixing this. However,
+ Method 2, which sets the =which-key-paging-prefixes= variable, did not work for
+ me. So instead we use Method 1, in which =which-key-use-C-h-commands= is set to
+ true (which it is by default) so that the =C-h= key is used for paging. But we
+ need to make some adjustments for the cases where the prefix key followed by
+ =C-h= is bound to something. I found that simply unsetting the keybinding
+ allows =which-key= to use =C-h= for paging like it wants to.
+
+ =Help-char= prefix:
+ For us =<f1>= since we use =C-h= for backspace like in the terminal.
+ =<f1> C-h= is likely bound to =help-for-help=, so we unset it:
 
  #+begin_src emacs-lisp
- (define-key help-map "\C-h" 'which-key-C-h-dispatch)
+ (keymap-global-unset "<f1> C-h")
  #+end_src
+
+ =<esc>= prefix:
+ For us =<esc> C-h= aka =C-M-h= was bound to =mark-defun=. We don't want to
+ lose that keybinding, so we move it to =C-M-y= and unset =<esc> C-h=:
+
+ #+begin_src emacs-lisp
+ (keymap-unset esc-map "C-h")
+ (keymap-set esc-map "C-y" 'mark-defun)
+ #+end_src
+
+ We have not found any other prefix keys with issues yet.
 
 * Making Emacs Smarter
 
