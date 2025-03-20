@@ -900,6 +900,19 @@ remap ~move-beginning-of-line~ to ~move-beginning-of-line-or-indent~.
                   'move-beginning-of-line-or-indent)
 #+end_src
 
+Bind C-, and C-. to =scroll-up-line= and =scroll-down-line= so we can scroll
+more smoothly than by pages via C-v and M-v.
+
+C-, is normally bound to =org-cycle-agenda-files= in =org-mode-map=. However, we
+can live without that binding because =org-cycle-agenda-files= is also bound to
+C-' so we unset it in =org-mode-map=.
+
+#+begin_src emacs-lisp
+(keymap-global-set "C-." 'scroll-down-line)
+(keymap-global-set "C-," 'scroll-up-line)
+(keymap-unset org-mode-map "C-,")
+#+end_src
+
 ~duplicate-current-line-or-region~ is defined above in the Global Top-Level
 Definitions section.
 
