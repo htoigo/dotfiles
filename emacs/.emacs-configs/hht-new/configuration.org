@@ -475,11 +475,21 @@ be wrapped in an ~eval-when-compile~ form, to further reduce load time.
 
 Tell =use-package= to be more verbose. Also, ensure packages are installed; i.e.
 if a package declared with use-package has not been installed already, go ahead
-and install it via package.el. These settings were used by Harry Schwartz.
+and install it via package.el. These settings were used by Harry Schwartz. Also,
+per the recommendation of GNU Emacs Use-Package manual section 5.2, Pinning
+packages using :pin:
+
+Unfortunately, the third-party archive MELPA uses a versioning scheme based on
+dates, which means that packages from that archive are always preferred. If you
+are using that archive, we strongly encourage you to customize
+use-package-always-pin to nongnu. This guarantees that you are using a version
+of that package that has been specifically marked for release by its developer,
+and not a development snapshot.
 
 #+begin_src emacs-lisp
   (setq use-package-verbose t
-        use-package-always-ensure t)
+        use-package-always-ensure t
+        use-package-always-pin nongnu)
 #+end_src
 
 Always compile packages.
