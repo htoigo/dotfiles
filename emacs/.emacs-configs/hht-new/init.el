@@ -16,8 +16,8 @@
  '(org-agenda-files '("~/Documents/org/personal.org"))
  '(org-log-done 'time)
  '(package-selected-packages
-   '(auctex slime nvm org-bullets ace-jump-mode company use-package-chords smex
-            which-key spacemacs-theme try auto-compile)))
+   '(ace-jump-mode auctex auto-compile company evil nvm org-bullets slime smex
+                   spacemacs-theme try use-package-chords which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
