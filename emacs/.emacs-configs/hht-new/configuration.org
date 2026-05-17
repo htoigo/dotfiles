@@ -819,12 +819,17 @@ Make backups of files even when they are under version control.
 
 Window navigation.
 
-Use Shift + /arrow/ keys to move among windows, accomplished via
-~windmove-default-keybindings~.
+Rebind moving between windows from =C-x o= to =M-o=, as it is such a common
+thing to do.
 
-Rotate windows with =C-c C-,=
+We also use the /windmove/ package that ships with Emacs to move in cardinal
+directions with Shift + /arrow/ keys to move among windows instead of cycling
+through all windows. This is enabled by calling ~windmove-default-keybindings~.
+
+Rotate windows with =C-c C-,=.
 
 #+begin_src emacs-lisp
+  (global-set-key (kbd "M-o") 'other-window)
   (windmove-default-keybindings)
   (global-set-key (kbd "C-c C-,") 'rotate-windows)
   ;; How to bind (kbd "C-c C-.") to 'rotate-windows with a C-u or negative arg?
