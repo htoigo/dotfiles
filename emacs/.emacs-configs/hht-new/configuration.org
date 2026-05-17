@@ -473,11 +473,21 @@ be wrapped in an ~eval-when-compile~ form, to further reduce load time.
 ;;  (require 'diminish)           ; if you use :diminish
 #+end_src
 
-Tell =use-package= to be more verbose. Also, ensure packages are installed; i.e.
-if a package declared with use-package has not been installed already, go ahead
-and install it via package.el. These settings were used by Harry Schwartz. Also,
-per the recommendation of GNU Emacs Use-Package manual section 5.2, Pinning
-packages using :pin:
+Tell =use-package= to be more verbose.
+
+Ensure packages are installed automatically; i.e. if a package declared with
+use-package has not been installed already, go ahead and install it via
+package.el.
+
+The above settings were used by Harry Schwartz.
+
+FIXME: Trying to customize the setting, use-package-always-pin 'nongnu caused
+an error symbol nongnu value is void. Don't know why.
+
+Per the recommendation of GNU Emacs Use-Package manual section 5.2, Pinning
+packages using :pin:, by default pin packages to 'nongnu (NonGNU ELPA). That
+is, prefer installing packages from NonGNU ELPA rather than MELPA. This is
+because:
 
 Unfortunately, the third-party archive MELPA uses a versioning scheme based on
 dates, which means that packages from that archive are always preferred. If you
@@ -488,8 +498,7 @@ and not a development snapshot.
 
 #+begin_src emacs-lisp
   (setq use-package-verbose t
-        use-package-always-ensure t
-        use-package-always-pin nongnu)
+        use-package-always-ensure t)
 #+end_src
 
 Always compile packages.
