@@ -716,12 +716,12 @@ case we accidentally hit =C-c= instead of =C-x=.
 
 ** Key-chords
 
-Whoa, the mind-exploding power of key chords!
+ Whoa, the mind-exploding power of key chords!
 
-#+begin_src emacs-lisp
-  (use-package use-package-chords
-    :config (key-chord-mode 1))
-#+end_src
+ #+begin_src emacs-lisp
+   (use-package use-package-chords
+     :config (key-chord-mode 1))
+ #+end_src
 
 * Editing Settings
 
