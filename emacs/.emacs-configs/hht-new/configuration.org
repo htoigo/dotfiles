@@ -689,8 +689,21 @@ there are solarized light and dark themes in the custom themes menu.
 
  We have not found any other prefix keys with issues yet.
 
-* Making Emacs Smarter
+* Evil Mode
 
+Evil gives us Vim in Emacs.
+
+FIXME: We need to configure more before we can use Evil Mode.
+Change key bindings for Colemak layout, etc...
+
+# #+begin_src emacs-lisp
+  (use-package evil
+    :pin nongnu
+    :config
+    (evil-mode 1))
+# #+end_src
+
+* Making Emacs Smarter
 ** Ido
 
  Enable ido-everywhere mode.
