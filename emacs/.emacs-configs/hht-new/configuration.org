@@ -1005,6 +1005,23 @@ Expand the set of languages we can execute in code blocks from just emacs lisp:
 (setq org-babel-load-languages '((emacs-lisp . t) (shell . t)))
 #+end_src
 
+** Key bindings
+
+ For a better experience with Org Mode, the three Org commands =org-store-link=,
+ =org-capture= and =org-agenda= ought to be accessible anywhere in Emacs, not
+ just in Org buffers. To that effect, you need to bind them to globally
+ available keys, like the ones reserved for users (e.g., "C-c <letter>").
+
+ In Emacs 29+, =global-set-key= has been superseded by the higher-level function
+ =keymap-global-set=, which eliminates the need for the (kbd ...) wrapper. One
+ should still continue to use #' with it.
+
+ #+begin_src emacs-lisp
+ (keymap-global-set "C-c l" #'org-store-link)
+ (keymap-global-set "C-c a" #'org-agenda)
+ (keymap-global-set "C-c c" #'org-capture)
+ #+end_src
+
 * Software Development
 ** General
 
