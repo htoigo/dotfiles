@@ -841,30 +841,32 @@ Rotate windows with =C-c C-,=.
 Using =ace-jump-mode=, we can navigate almost directly to any position in view,
 within three key presses!
 
-=C-;= starts Ace jump *word* mode
+=ne= starts Ace jump *word* mode.  Was: =C-;=, then =jj=
 
 Enter the first character of a word and type one of the highlighted keys
 covering each match to move to that word.
 
-With a prefix argument =C-u C-;= starts Ace Jump *character* mode, allowing you
-to jump to characters within words.
+=nu= starts Ace Jump *character* mode, allowing you
+to jump to characters within words.  Was: =C-u C-;=, then =jk=
 
 Enter a character, and then type one of the highlighted keys covering each match
 to move to that character position.
 
-=C-u C-u C-;= starts Ace jump *line* mode.
+=ni= starts Ace jump *line* mode.  Was: =C-u C-u C-;=, then =jl=
 
 Each non-empty line will be marked; type one of the highlighted keys to move to
 that line.
+
+=ny= starts ace-jump-mode-pop-mark.  Was: =C-S-;=, then =jp=
 
 #+begin_src emacs-lisp
   (use-package ace-jump-mode
     ;; :bind (("C-;" . ace-jump-mode)
     ;;        ("C-S-;" . ace-jump-mode-pop-mark))
-    :chords (("jj" . ace-jump-word-mode)
-             ("jk" . ace-jump-char-mode)
-             ("jl" . ace-jump-line-mode)
-             ("jp" . ace-jump-mode-pop-mark))
+    :chords (("ne" . ace-jump-word-mode)
+             ("nu" . ace-jump-char-mode)
+             ("ni" . ace-jump-line-mode)
+             ("ny" . ace-jump-mode-pop-mark))
     :config (ace-jump-mode-enable-mark-sync))
 #+end_src
 
