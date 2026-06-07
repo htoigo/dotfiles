@@ -481,20 +481,15 @@ package.el.
 
 The above settings were used by Harry Schwartz.
 
-FIXME: Trying to customize the setting, use-package-always-pin 'nongnu caused
-an error symbol nongnu value is void. Don't know why.
-
-Per the recommendation of GNU Emacs Use-Package manual section 5.2, Pinning
-packages using :pin:, by default pin packages to 'nongnu (NonGNU ELPA). That
-is, prefer installing packages from NonGNU ELPA rather than MELPA. This is
-because:
-
-Unfortunately, the third-party archive MELPA uses a versioning scheme based on
-dates, which means that packages from that archive are always preferred. If you
-are using that archive, we strongly encourage you to customize
-use-package-always-pin to nongnu. This guarantees that you are using a version
-of that package that has been specifically marked for release by its developer,
-and not a development snapshot.
+NOTE: Following the advice of the Use-Package manual section 5.2 on Pinning
+Packages using :pin--i.e., customizing the variable use-package-always-pin to
+nongnu, results in the ERROR "Symbol's value as variable is void". This error
+occurs whether you set the variable to nongnu, 'nongnu, gnu, 'gnu, "nongnu",
+"gnu", etc. It seems to be broken. We are not using it. We have set the
+priorities of the package archives giving gnu priority 2, nongnu priority 1 and
+all others, which right now is only melpa-stable, priority 0. This seems to
+result in preferring packages from nongnu over melpa-stable, even when a package
+is in both. At least, it installed the evil package from nongnu.
 
 #+begin_src emacs-lisp
   (setq use-package-verbose t
