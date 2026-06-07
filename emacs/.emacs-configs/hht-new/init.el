@@ -13,7 +13,7 @@
  '(custom-safe-themes
    '("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088"
      "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
- '(org-agenda-files '("~/Documents/org/personal.org"))
+ '(org-agenda-files '("~/Documents/org/"))
  '(org-log-done 'time)
  '(package-selected-packages
    '(ace-jump-mode auctex auto-compile company evil nvm org-bullets slime smex
