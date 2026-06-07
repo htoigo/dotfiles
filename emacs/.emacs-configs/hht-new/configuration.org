@@ -688,16 +688,51 @@ there are solarized light and dark themes in the custom themes menu.
 
 Evil gives us Vim in Emacs.
 
-FIXME: We need to configure more before we can use Evil Mode.
-Change key bindings for Colemak layout, etc...
+#+begin_src emacs-lisp
+(use-package evil
+  ;; :defer t    ; don't we need this?
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)   ; needed if using evil-collection
+  :config
+  (evil-mode 1)
+  ;; Remap keys for Colemak layout
+  (evil-define-key '(normal visual motion operator) 'global
+    (kbd "n") #'evil-backward-char          ; was h (left)
+    (kbd "u") #'evil-previous-line          ; was k (up)
+    (kbd "e") #'evil-next-line              ; was j (down)
+    (kbd "i") #'evil-forward-char           ; was l (right)
 
-# #+begin_src emacs-lisp
-  (use-package evil
-    :pin nongnu
-    :config
-    (evil-mode 1))
-# #+end_src
+    ;; Reassign displaced commands to new keys
+    (kbd "h") #'evil-search-next            ; was n
+    (kbd "H") #'evil-search-previous        ; was N
+    (kbd "b") #'evil-undo                   ; was u (no U?)
+    (kbd "w") #'evil-forward-word-end       ; was e
+    (kbd "W") #'evil-forward-WORD-end       ; was E
+    ;; (kbd "gw") #'evil-backward-word-end     ; was g e
+    ;; (kbd "gW") #'evil-backward-WORD-end     ; was g E
+    (kbd "j") #'evil-insert                 ; was i
+    (kbd "J") #'evil-insert-line            ; was I
+    (kbd "U") #'evil-window-top             ; was H
+    (kbd "l") #'evil-backward-word-begin    ; was b
+    (kbd "L") #'evil-backward-WORD-begin    ; was B
+    (kbd "C-l") #'evil-first-non-blank      ; was ^
+    (kbd "y") #'evil-forward-word-begin     ; was w
+    (kbd "Y") #'evil-forward-WORD-begin     ; was W
+    (kbd "C-y") #'evil-end-of-line          ; was $
+    (kbd "N") #'evil-join                   ; was J
+    (kbd "E") #'evil-window-bottom          ; was L
+    (kbd "k") #'evil-yank                   ; was y
+    (kbd "K") #'evil-yank-line              ; was Y
+    ;; (kbd "kk") #'evil-yank-line             ; was y y
+    (kbd "I") #'evil-lookup))               ; was K
+#+end_src
 
+** TODO Investigate the packages evil-collection, evil-colemak
+
+ These apparently set key bindings for Colemak.
+
+** TODO Package evil-snipe the best find-char
 * Making Emacs Smarter
 ** Ido
 
