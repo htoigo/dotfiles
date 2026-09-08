@@ -1,4 +1,4 @@
-;;; Emacs initialization file
+;;; init.el --- Emacs initialization file  -*- lexical-binding: t; -*-
 
 (org-babel-load-file "~/.emacs.d/configuration.org")
 

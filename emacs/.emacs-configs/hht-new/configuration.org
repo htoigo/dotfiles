@@ -4,6 +4,17 @@
 #+EMAIL: hhtoigo@gmail.com
 #+OPTIONS: toc:nil num:nil
 
+* Output file banner
+
+Insert an identifying banner at the beginning of the *.el file produced from
+this *.org file. Also insert a lexical-binding cookie--this avoids warnings
+about it being missing when Emacs starts.
+
+#+begin_src emacs-lisp
+;;; configuration.el --- tangled from config Org file -*- lexical-binding: t; -*-
+
+#+end_src
+
 * Start with Sensible Defaults
 
 Due to its long history, or perhaps just the eccentricity of its creators, Emacs
@@ -695,7 +706,8 @@ Evil gives us Vim in Emacs.
   ;; :defer t    ; don't we need this?
   :init
   (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)   ; needed if using evil-collection
+  (setq evil-want-C-i-jump nil)     ; C-i conflicts with Org mode TAB binding
+  ;; (setq evil-want-keybinding nil)   ; needed if using evil-collection
   :config
   (evil-mode 1)
   ;; Remap keys for Colemak layout
@@ -729,6 +741,13 @@ Evil gives us Vim in Emacs.
     ;; (kbd "kk") #'evil-yank-line             ; was y y
     (kbd "I") #'evil-lookup))               ; was K
 #+end_src
+
+** TODO Investigate the =evil-org= package
+
+ The =evil-org= package handles Evil's C-i stomping on Org Mode's TAB binding,
+ along with a lot of other Org/Evil friction (list manipulation, o/O on
+ headlines, motion by heading). If you plan to live in Org, it's less fiddly
+ than hand-binding.
 
 ** TODO Investigate the packages evil-collection, evil-colemak
 
