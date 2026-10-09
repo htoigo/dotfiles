@@ -701,13 +701,23 @@ there are solarized light and dark themes in the custom themes menu.
 
 Evil gives us Vim in Emacs.
 
+2026-09-07: We wanted to add the must-have package =evil-collection=, but its
+keybindings are all hardcoded to the qwerty layout, and I don't see an easy way
+to change them all to fit with the colemak layout. So, we are removing
+=evil-collection= for now.
+
+We also add the must-have package =evil-collection=, which extends the vim-style
+keybindings to places and modes other than text-editing buffers, e.g. calc,
+calendar, help-mode, eshell, etc.
+
 #+begin_src emacs-lisp
 (use-package evil
   ;; :defer t    ; don't we need this?
   :init
-  (setq evil-want-integration t)
+  ;; (setq evil-want-integration t)    ; required by evil-collection
+  ;; (setq evil-want-keybinding nil)   ; required by evil-collection
+  (defvar evil-mode-buffers '())    ; TEMPORARY: Prevent error in Emacs 31.1
   (setq evil-want-C-i-jump nil)     ; C-i conflicts with Org mode TAB binding
-  ;; (setq evil-want-keybinding nil)   ; needed if using evil-collection
   :config
   (evil-mode 1)
   ;; Remap keys for Colemak layout
@@ -740,6 +750,12 @@ Evil gives us Vim in Emacs.
     (kbd "K") #'evil-yank-line              ; was Y
     ;; (kbd "kk") #'evil-yank-line             ; was y y
     (kbd "I") #'evil-lookup))               ; was K
+
+;; (use-package evil-collection
+;;   :after evil
+;;   :config
+;;   (evil-collection-init))
+
 #+end_src
 
 ** TODO Investigate the =evil-org= package
