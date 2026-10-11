@@ -179,7 +179,7 @@ EIGHTBIT 1
 NORMAL 00       # no color code at all
 #FILE 01;33
 FILE 38;2;101;123;131     # Regular file: use color base00
-# DIR 34 
+# DIR 34
 #DIR 38;2;38;139;210       # Directory: use solarized blue
 # Directory: use more readable variation of solarized blue
 # DIR 38;2;38;66;210
